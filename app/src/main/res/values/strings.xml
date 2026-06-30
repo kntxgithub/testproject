@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">カロリー記録</string>
+    <string name="empty_message">まだ記録がありません\nカメラボタンで食事を撮影してください</string>
+</resources>
