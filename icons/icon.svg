@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d6ac4"/>
+      <stop offset="1" stop-color="#134a8c"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#bg)"/>
+  <g transform="translate(256 262) scale(1) translate(-256 -262)">
+    <!-- ドラム（ミキサー） -->
+    <g transform="rotate(-14 300 232)">
+      <rect x="196" y="168" width="216" height="128" rx="62" fill="#fff"/>
+      <path d="M232 178 L262 286 M282 172 L312 290 M332 172 L362 290" stroke="#1d6ac4"
+            stroke-width="13" stroke-linecap="round" fill="none" opacity=".55"/>
+    </g>
+    <!-- シュート -->
+    <path d="M392 282 L444 328 L422 348 L374 306 Z" fill="#fff"/>
+    <!-- 運転席 -->
+    <path d="M96 214 h74 v122 h-92 v-70 z" fill="#fff"/>
+    <path d="M104 232 h56 v40 h-64 z" fill="#1d6ac4" opacity=".8"/>
+    <!-- シャシー -->
+    <rect x="78" y="326" width="330" height="26" rx="10" fill="#fff"/>
+    <!-- タイヤ -->
+    <g fill="#fff">
+      <circle cx="140" cy="372" r="40"/>
+      <circle cx="306" cy="372" r="40"/>
+      <circle cx="382" cy="372" r="40"/>
+    </g>
+    <g fill="#1d6ac4">
+      <circle cx="140" cy="372" r="16"/>
+      <circle cx="306" cy="372" r="16"/>
+      <circle cx="382" cy="372" r="16"/>
+    </g>
+  </g>
+</svg>

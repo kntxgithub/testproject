@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#eef1f5">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="打設管理">
+<meta name="description" content="生コン車の運行時刻を記録し、出荷ピッチ・回転時間・打設時間を集計します。">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
 <title>生コン打設管理</title>
 <style>
   :root{
@@ -64,6 +69,24 @@
   .toolbar .hint{color:var(--muted);font-size:11.5px;}
   .toolbar button.danger{color:#8c1c1c;border-color:#c99;}
   .toolbar button.primary{background:linear-gradient(#eaf6ec,#d6ebda);border-color:#8bb795;font-weight:700;}
+  .toolbar button.install{background:linear-gradient(#eef4fd,#dbe8fa);border-color:#8fb2dd;color:#14458a;}
+
+  /* ===== ホーム画面への追加の案内（iPhone 用） ===== */
+  #installHelp{
+    position:fixed;left:8px;right:8px;bottom:8px;z-index:60;max-width:520px;margin:0 auto;
+    background:#fff;border:1px solid var(--line-strong);border-radius:10px;
+    box-shadow:0 8px 26px rgba(0,0,0,.25);padding:12px 14px;
+  }
+  #installHelp h3{margin:0 0 6px;font-size:13px;}
+  #installHelp p{margin:0 0 8px;font-size:12.5px;line-height:1.6;color:#3a4653;}
+  #installHelp .share{
+    display:inline-block;border:1px solid var(--line);border-radius:4px;padding:0 5px;
+    background:#f4f6f9;font-weight:700;
+  }
+  #installHelp button{
+    font:inherit;font-size:13px;padding:8px 14px;border:1px solid var(--line-strong);
+    border-radius:6px;background:linear-gradient(#fff,#eef1f5);cursor:pointer;width:100%;min-height:38px;
+  }
 
   /* ===== カード表示 ===== */
   .view-cards{display:none;flex-direction:column;gap:8px;padding:8px;}
@@ -224,7 +247,7 @@
   }
   @media print{
     body{background:#fff;font-size:11px;}
-    .toolbar,.saveinfo,#picker,.view-cards{display:none !important;}
+    .toolbar,.saveinfo,#picker,#installHelp,.view-cards{display:none !important;}
     .sheet{border:none;margin:0;max-width:none;min-height:0;}
     .grid-wrap{overflow:visible;max-height:none;display:block !important;}
     thead th,th.rowhead{position:static;}
@@ -254,6 +277,7 @@
     <button id="btnDel" class="desk-only danger">行を削除</button>
     <span class="spacer"></span>
     <span class="hint">時刻の枠を押す → 現在時刻の候補／そのまま数字を打てば手入力</span>
+    <button id="btnInstall" class="install" hidden>▼ ホーム画面に追加</button>
     <button id="btnView">表示：自動</button>
     <button id="btnCsv">CSV</button>
     <button id="btnBackup">バックアップ</button>
@@ -279,6 +303,14 @@
 </div>
 
 <div id="picker"></div>
+
+<div id="installHelp" hidden>
+  <h3>ホーム画面に追加すると、アプリとして開けます</h3>
+  <p>画面下の <span class="share">共有</span> ボタンを押して、
+     一覧から <b>「ホーム画面に追加」</b> を選んでください。<br>
+     追加すると、電波の届かない現場でも開けるようになります。</p>
+  <button id="installHelpClose">閉じる</button>
+</div>
 
 <script>
 "use strict";
@@ -1240,6 +1272,51 @@ function load(){
   $('btnView').textContent = '表示：' + (VIEWS.find(x=>x[0]===document.body.dataset.view)||VIEWS[0])[1];
 }
 HEAD_IDS.forEach(id=>$(id).addEventListener('input', ()=>{ save(); scheduleStats(); }));
+
+/* ============================================================
+   ホーム画面への追加（PWA）
+   ============================================================ */
+const isStandalone = () =>
+  matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () =>
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+// 他のページに埋め込まれて表示されているときは、追加の案内を出さない
+const embedded = (()=>{ try{ return window.top !== window.self; }catch(_){ return true; } })();
+
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();                       // 既定の案内を止めて、ボタンから出す
+  installPrompt = e;
+  if(!isStandalone() && !embedded) $('btnInstall').hidden = false;
+});
+$('btnInstall').onclick = async ()=>{
+  if(installPrompt){
+    installPrompt.prompt();
+    const res = await installPrompt.userChoice;
+    installPrompt = null;
+    if(res.outcome === 'accepted') $('btnInstall').hidden = true;
+    return;
+  }
+  $('installHelp').hidden = false;           // iPhone は手順を案内
+};
+$('installHelpClose').onclick = ()=>{ $('installHelp').hidden = true; };
+window.addEventListener('appinstalled', ()=>{
+  installPrompt = null;
+  $('btnInstall').hidden = true;
+  $('installHelp').hidden = true;
+});
+// iPhone は beforeinstallprompt が来ないので、未追加なら案内ボタンを出す
+if(isIOS() && !isStandalone() && !embedded) $('btnInstall').hidden = false;
+
+// 現場で開けるように一式を端末に持たせる（https と localhost のみ）
+if('serviceWorker' in navigator && !embedded &&
+   (location.protocol === 'https:' || ['localhost','127.0.0.1'].includes(location.hostname))){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
 
 /* ============================================================
    起動
