@@ -79,7 +79,8 @@
   .tapfld > .txt{overflow:hidden;text-overflow:ellipsis;}
   .tapfld.ph{color:#9aa3ad;}
   .f-no{width:52px;justify-content:center;font-weight:700;font-variant-numeric:tabular-nums;}
-  .f-truck{flex:1;min-width:0;}
+  .f-truck{flex:1;min-width:0;justify-content:center;font-weight:700;font-size:15px;
+           font-variant-numeric:tabular-nums;}
   .f-vol{width:82px;justify-content:flex-end;font-variant-numeric:tabular-nums;}
   .f-del{
     width:34px;min-height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;
@@ -154,6 +155,8 @@
   td.t-text input.editor{text-align:left;}
   td.t-num input.editor{text-align:right;}
   .tapfld input.editor,.card-memo input.editor{text-align:left;height:30px;}
+  .f-truck input.editor{text-align:center;}
+  .f-vol input.editor{text-align:right;}
 
   /* ===== 時刻ピッカー ===== */
   #picker{
@@ -285,7 +288,7 @@
    ============================================================ */
 const COLS = [
   {key:'no',      label:'納入番号',  type:'text', w:60,  ph:'No'},
-  {key:'truck',   label:'車両番号',  type:'text', w:134, ph:'車両番号'},
+  {key:'truck',   label:'車番',      type:'num',  w:80, ph:'車番', int:true},
   {key:'vol',     label:'積載量',    sub:'m³',    type:'num',  w:66, ph:'積載量', unit:' m³'},
   {key:'cum',     label:'累計数量',  sub:'m³',    type:'num',  w:76, auto:true},
   {key:'depart',  label:'発時間',    short:'発',       type:'time', w:76},
@@ -375,6 +378,12 @@ function parseTime(s){
   return null;
 }
 const fmtTime = min => min==null ? '' : pad2(Math.floor(min/60)%24)+':'+pad2(min%60);
+
+/** 全角数字を半角に。int の項目（車番）は数字以外を取り除く */
+function normNum(s, intOnly){
+  let t = String(s).replace(/[０-９．]/g, ch=>String.fromCharCode(ch.charCodeAt(0)-0xFEE0));
+  return intOnly ? t.replace(/\D/g,'') : t.trim();
+}
 
 /** 経過分。日跨ぎは +24h として扱う */
 function span(a,b){
@@ -738,9 +747,9 @@ function renderTrucks(){
   });
   let html;
   if(!map.size){
-    html = '<tbody><tr><td style="text-align:left;color:#868f9a;">車両番号を入力すると、車両ごとの回転時間を集計します。</td></tr></tbody>';
+    html = '<tbody><tr><td style="text-align:left;color:#868f9a;">車番を入力すると、車両ごとの回転時間を集計します。</td></tr></tbody>';
   }else{
-    html = '<thead><tr><th style="text-align:left">車両番号</th><th>運搬回数</th><th>運搬量</th>'+
+    html = '<thead><tr><th style="text-align:left">車番</th><th>運搬回数</th><th>運搬量</th>'+
            '<th>平均回転</th><th>最短</th><th>最長</th><th>平均待機</th></tr></thead><tbody>';
     map.forEach((e,name)=>{
       html += `<tr><td>${escapeHtml(name)}</td><td>${e.n}</td><td>${round2(e.vol)}</td>`+
@@ -802,7 +811,7 @@ function beginEdit(r, key, initial){
   const inp = el('input','editor');
   inp.type = 'text';
   inp.autocomplete = 'off';
-  if(col.type==='num') inp.inputMode='decimal';
+  if(col.type==='num') inp.inputMode = col.int ? 'numeric' : 'decimal';
   else if(col.type==='time') inp.inputMode='numeric';
   inp.value = (initial!=null && initial!=='') ? initial : (rows[r][key] ?? '');
 
@@ -839,10 +848,13 @@ function closeEditor(){
 function commitEdit(){
   if(!editing) return;
   const {r, key, input} = editing;
+  const col = COL[key];
   let v = input.value.trim();
-  if(COL[key].type==='time'){
+  if(col.type==='time'){
     const p = parseTime(v);
     if(p!=null) v = fmtTime(p);            // 9 ／ 934 ／ 9:34 → 09:34 に整形
+  }else if(col.type==='num'){
+    v = normNum(v, col.int);               // 車番は数字だけ
   }
   closeEditor();
   if(rows[r][key] === v){ updateRow(r); return; }
