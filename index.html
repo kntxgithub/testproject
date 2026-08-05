@@ -22,7 +22,7 @@
     --muted:#68727e;
     color-scheme:light;
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(28,110,208,.15);}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(28,110,208,.12);}
   html,body{margin:0;padding:0;background:#eef1f5;}
   body{
     font-family:"Meiryo","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
@@ -34,7 +34,7 @@
   }
   button{font-family:inherit;}
 
-  /* ===== ヘッダー（センタリング） ===== */
+  /* ===== ヘッダー ===== */
   header.title-block{padding:12px 10px 10px;text-align:center;border-bottom:2px solid var(--line-strong);}
   header.title-block h1{font-size:17px;margin:0 0 9px;letter-spacing:.3em;font-weight:700;}
   .site-fields{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:6px 20px;}
@@ -64,23 +64,23 @@
   .toolbar .hint{color:var(--muted);font-size:11.5px;}
   .toolbar button.danger{color:#8c1c1c;border-color:#c99;}
   .toolbar button.primary{background:linear-gradient(#eaf6ec,#d6ebda);border-color:#8bb795;font-weight:700;}
-  .menu-only{display:none;}
 
-  /* ===== カード表示（スマホ） ===== */
+  /* ===== カード表示 ===== */
   .view-cards{display:none;flex-direction:column;gap:8px;padding:8px;}
-  .card{border:1px solid var(--line);border-radius:9px;background:#fff;padding:8px;box-shadow:0 1px 2px rgba(0,0,0,.05);}
-  .card.is-sel{border-color:var(--sel);box-shadow:0 0 0 2px rgba(28,110,208,.18);}
+  .card{border:1px solid var(--line);border-radius:9px;background:#fff;padding:8px;}
+  .card.is-sel{border-color:var(--sel);box-shadow:0 0 0 2px rgba(28,110,208,.16);}
   .card-top{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
   .tapfld{
     font:inherit;border:1px solid transparent;background:#f4f6f9;border-radius:6px;
     padding:6px 8px;min-height:36px;text-align:left;cursor:pointer;color:var(--text);
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    overflow:hidden;white-space:nowrap;display:flex;align-items:center;
   }
   .tapfld:active{background:#e2eaf4;}
+  .tapfld > .txt{overflow:hidden;text-overflow:ellipsis;}
   .tapfld.ph{color:#9aa3ad;}
-  .f-no{width:52px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;}
+  .f-no{width:52px;justify-content:center;font-weight:700;font-variant-numeric:tabular-nums;}
   .f-truck{flex:1;min-width:0;}
-  .f-vol{width:82px;text-align:right;font-variant-numeric:tabular-nums;}
+  .f-vol{width:82px;justify-content:flex-end;font-variant-numeric:tabular-nums;}
   .f-del{
     width:34px;min-height:36px;border:1px solid var(--line);border-radius:6px;background:#fff;
     color:#8c1c1c;cursor:pointer;font-size:15px;flex:none;
@@ -89,16 +89,15 @@
   .chip{
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
     min-height:56px;border:1px solid var(--line);border-radius:7px;background:var(--time-bg);
-    cursor:pointer;padding:2px 1px;
+    cursor:pointer;padding:2px 1px;color:var(--text);
   }
   .chip:active{background:#dcefe0;}
-  .chip .lb{font-size:9.5px;color:var(--muted);white-space:nowrap;}
-  .chip .t{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+  .chip > .lb{font-size:9.5px;color:var(--muted);white-space:nowrap;}
+  .chip > .t{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;}
   .chip.empty{background:#fbfcfb;border-style:dashed;}
-  .chip.empty .t{color:#b4bcc5;font-weight:400;}
-  .chip.bad .t{color:#c00;font-size:12px;}
-  .chip.on{border-color:var(--sel);box-shadow:0 0 0 2px rgba(28,110,208,.18);}
-  .chip input.editor{width:100%;}
+  .chip.empty > .t{color:#b4bcc5;font-weight:400;}
+  .chip.bad > .t{color:#c00;font-size:12px;}
+  .chip.on{border-color:var(--sel);box-shadow:0 0 0 2px rgba(28,110,208,.16);}
   .card-metrics{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px;}
   .mtr{
     font-size:11px;background:var(--calc-bg);border:1px solid #e0e6ec;border-radius:5px;
@@ -108,14 +107,13 @@
   .mtr.warn{background:var(--warn);border-color:#e6cf8e;}
   .mtr.alert{background:var(--alert);border-color:#e3a3a3;font-weight:700;}
   .card-memo{
-    display:block;width:100%;margin-top:6px;font:inherit;font-size:12px;text-align:left;
+    display:flex;align-items:center;width:100%;margin-top:6px;font:inherit;font-size:12px;text-align:left;
     background:none;border:none;border-top:1px dashed var(--line);padding:6px 2px 0;
-    color:#46515e;cursor:pointer;
+    color:#46515e;cursor:pointer;min-height:30px;
   }
   .card-memo.ph{color:#aab3bd;}
-  .card-memo input.editor{font-size:16px;}
 
-  /* ===== 表（エクセル風） ===== */
+  /* ===== 表 ===== */
   .grid-wrap{overflow:auto;max-height:min(62vh,640px);}
   .grid-wrap:focus{outline:none;}
   table.grid{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;}
@@ -137,25 +135,25 @@
   }
   thead th.rowhead{z-index:4;}
   td.cell{text-align:center;cursor:cell;white-space:nowrap;font-variant-numeric:tabular-nums;}
-  td.cell .v{display:block;padding:0 5px;line-height:29px;height:29px;overflow:hidden;text-overflow:ellipsis;}
-  td.t-text .v{text-align:left;}
-  td.t-num  .v{text-align:right;}
-  td.t-time .v{font-size:14px;}
+  td.cell > .v{display:block;padding:0 5px;line-height:29px;height:29px;overflow:hidden;text-overflow:ellipsis;}
+  td.t-text > .v{text-align:left;}
+  td.t-num  > .v{text-align:right;}
+  td.t-time > .v{font-size:14px;}
   td.t-time{background:var(--time-bg);}
   td.t-calc{background:var(--calc-bg);color:#243040;}
-  td.auto  .v{color:#5a6472;}
+  td.auto > .v{color:#5a6472;}
   td.cell.sel{outline:2px solid var(--sel);outline-offset:-2px;background:#eaf3ff;}
   td.cell.sel.t-time{background:#e8f5ea;}
-  td.warn{background:var(--warn)!important;}
-  td.alert{background:var(--alert)!important;font-weight:700;}
-  td.bad .v{color:#c00;}
-  tbody tr:nth-child(even) td.cell{background-image:linear-gradient(rgba(0,0,0,.012),rgba(0,0,0,.012));}
+  td.warn{background:var(--warn);}
+  td.alert{background:var(--alert);font-weight:700;}
+  td.bad > .v{color:#c00;}
   input.editor{
-    width:100%;height:100%;min-height:29px;border:none;padding:0 4px;font:inherit;font-size:16px;
+    width:100%;height:100%;min-height:30px;border:none;padding:0 4px;font:inherit;font-size:16px;
     background:#fffbe6;text-align:center;outline:2px solid var(--sel);outline-offset:-2px;border-radius:4px;
   }
   td.t-text input.editor{text-align:left;}
   td.t-num input.editor{text-align:right;}
+  .tapfld input.editor,.card-memo input.editor{text-align:left;height:30px;}
 
   /* ===== 時刻ピッカー ===== */
   #picker{
@@ -203,7 +201,7 @@
   .tw-wrap{overflow-x:auto;}
   .saveinfo{font-size:11px;color:#868f9a;padding:0 10px 14px;text-align:right;}
 
-  /* ===== 表示切替（自動／表／カード） ===== */
+  /* ===== 表示切替 ===== */
   body[data-view="cards"] .grid-wrap{display:none;}
   body[data-view="cards"] .view-cards{display:flex;}
   body[data-view="table"] .view-cards{display:none;}
@@ -214,9 +212,7 @@
     .sheet{border:none;}
     header.title-block h1{font-size:15px;letter-spacing:.18em;}
     .site-fields{gap:4px 14px;}
-    .toolbar .hint{display:none;}
-    .toolbar .desk-only{display:none;}
-    .menu-only{display:inline-block;}
+    .toolbar .hint,.toolbar .desk-only{display:none;}
     .stats{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:6px;}
     .summary{padding-bottom:calc(14px + env(safe-area-inset-bottom));}
   }
@@ -225,9 +221,9 @@
   }
   @media print{
     body{background:#fff;font-size:11px;}
-    .toolbar,.saveinfo,#picker,.view-cards{display:none!important;}
+    .toolbar,.saveinfo,#picker,.view-cards{display:none !important;}
     .sheet{border:none;margin:0;max-width:none;min-height:0;}
-    .grid-wrap{overflow:visible;max-height:none;display:block!important;}
+    .grid-wrap{overflow:visible;max-height:none;display:block !important;}
     thead th,th.rowhead{position:static;}
     @page{size:A4 landscape;margin:8mm;}
   }
@@ -237,7 +233,7 @@
 <div class="sheet">
 
   <header class="title-block">
-    <h1>生コン打設管理表</h1>
+    <h1>生コンクリート打設管理表</h1>
     <div class="site-fields">
       <span class="fld big"><label>現場名</label><input id="h_site" placeholder="○○○○新築工事"></span>
       <span class="fld mid"><label>施工者名</label><input id="h_builder" placeholder="株式会社○○建設"></span>
@@ -288,9 +284,9 @@
    列定義（入力列＋自動計算列）
    ============================================================ */
 const COLS = [
-  {key:'no',      label:'納入番号',  type:'text', w:60},
-  {key:'truck',   label:'車両番号',  type:'text', w:134},
-  {key:'vol',     label:'積載量',    sub:'m³',    type:'num',  w:66},
+  {key:'no',      label:'納入番号',  type:'text', w:60,  ph:'No'},
+  {key:'truck',   label:'車両番号',  type:'text', w:134, ph:'車両番号'},
+  {key:'vol',     label:'積載量',    sub:'m³',    type:'num',  w:66, ph:'積載量', unit:' m³'},
   {key:'cum',     label:'累計数量',  sub:'m³',    type:'num',  w:76, auto:true},
   {key:'depart',  label:'発時間',    short:'発',       type:'time', w:76},
   {key:'arrive',  label:'着時間',    short:'着',       type:'time', w:76},
@@ -304,10 +300,14 @@ const COLS = [
   {key:'d_back',  label:'帰着まで',  sub:'荷卸終了→帰着',type:'calc', w:88, m:'帰着まで'},
   {key:'d_done',  label:'発→荷卸完了',sub:'所要時間',    type:'calc', w:90},
   {key:'d_turn',  label:'回転時間',  sub:'発→帰着',      type:'calc', w:78, m:'回転'},
-  {key:'memo',    label:'備考',      type:'text', w:150},
+  {key:'memo',    label:'備考',      type:'text', w:150, ph:'備考'},
 ];
-const TIME_COLS = COLS.filter(c=>c.type==='time');
-const CARD_MTRS = ['d_pitch','d_tr','d_wait','d_unld','d_back','d_turn'];
+const TIME_COLS  = COLS.filter(c=>c.type==='time');
+const CARD_FLDS  = ['no','truck','vol'];
+const CARD_MTRS  = ['d_pitch','d_tr','d_wait','d_unld','d_back','d_turn'];
+const COUNT_KEYS = ['truck','vol','depart','arrive','ustart','uend','back'];
+/** 変更すると後続行の累計・出荷間隔に影響する項目 */
+const CASCADE = new Set(['vol','cum','depart']);
 const KEY_INDEX = {}; COLS.forEach((c,i)=>KEY_INDEX[c.key]=i);
 const COL = {}; COLS.forEach(c=>COL[c.key]=c);
 
@@ -318,20 +318,31 @@ const HEAD_IDS = ['h_site','h_builder','h_date','h_plan'];
    状態
    ============================================================ */
 let rows = [];
-let sel  = {r:0, c:0};
-let editing = null;   // {r, key, input, host}
-let picker  = {open:false, r:0, key:'', anchor:'', idx:0, items:[]};
+let sel  = {r:0, key:'no'};
+let editing = null;                       // {r, key, input, host, hidden[]}
+let picker  = {open:false, r:0, key:'', idx:0, items:[]};
+let tableRows = [];                       // [{tr, tds:{key:td}}]
+let cardRows  = [];                       // [{art, cells:{key:el}, mtr}]
+let built = {table:false, cards:false};
+let rowCalc = [];                         // 各行の計算結果（recompute で更新）
 
 const $ = id => document.getElementById(id);
-const gridEl = $('grid');
-const cardsEl = $('cards');
+const gridEl   = $('grid');
+const cardsEl  = $('cards');
 const pickerEl = $('picker');
+const mqNarrow = window.matchMedia('(max-width:880px)');
 
 function newRow(no){
   const o = {};
   COLS.forEach(c=>{ if(c.type!=='calc') o[c.key]=''; });
   o.no = no==null ? '' : String(no);
   return o;
+}
+function el(tag, cls, txt){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(txt!=null) e.textContent = txt;
+  return e;
 }
 
 /* ============================================================
@@ -379,69 +390,52 @@ const round2 = n => Math.round(n*100)/100;
 /* ============================================================
    計算
    ============================================================ */
-function calcRow(r){
-  const o = rows[r];
-  const t = k => parseTime(o[k]);
-  const dep=t('depart'), arr=t('arrive'), us=t('ustart'), ue=t('uend'), bk=t('back');
-  // 出荷間隔：直前に発時間が入っている車との差
-  let pitch = null;
-  if(dep!=null){
-    for(let i=r-1;i>=0;i--){
-      const p = parseTime(rows[i].depart);
-      if(p!=null){ pitch = span(p, dep); break; }
-    }
-  }
-  return {
-    d_pitch: pitch,
-    d_tr   : span(dep, arr),
-    d_wait : span(arr, us),
-    d_unld : span(us,  ue),
-    d_back : span(ue,  bk),
-    d_done : span(dep, ue),
-    d_turn : span(dep, bk),
-  };
-}
-/** 累計数量（手入力があればそれを基点に継続） */
-function cumulative(){
-  const out = []; let run = 0;
-  rows.forEach(o=>{
+/**
+ * 全行の時刻解析・所要時間・累計数量を1回の走査でまとめて計算する。
+ * 表示・集計はすべてこの結果を読むだけにして、入力のたびに
+ * 何度も解析し直さないようにしている。
+ */
+function recompute(){
+  rowCalc = new Array(rows.length);
+  let run = 0, prevDep = null;
+  for(let r=0;r<rows.length;r++){
+    const o = rows[r];
+    const dep=parseTime(o.depart), arr=parseTime(o.arrive), us=parseTime(o.ustart),
+          ue =parseTime(o.uend),   bk =parseTime(o.back);
     const manual = (o.cum||'')!=='' ? parseFloat(o.cum) : NaN;
-    if(!isNaN(manual)){ run = manual; out.push({v:run, manual:true}); return; }
-    const v = parseFloat(o.vol);
-    if(!isNaN(v)) run += v;
-    out.push({v:run, manual:false});
-  });
-  return out;
+    let cumManual = false;
+    if(!isNaN(manual)){ run = manual; cumManual = true; }
+    else { const v = parseFloat(o.vol); if(!isNaN(v)) run += v; }
+    const pitch = (dep!=null && prevDep!=null) ? span(prevDep, dep) : null;
+    if(dep!=null) prevDep = dep;
+    rowCalc[r] = {
+      dep, arr, us, ue, bk,
+      cum: run, cumManual,
+      d_pitch: pitch,
+      d_tr   : span(dep, arr),
+      d_wait : span(arr, us),
+      d_unld : span(us,  ue),
+      d_back : span(ue,  bk),
+      d_done : span(dep, ue),
+      d_turn : span(dep, bk),
+    };
+  }
 }
-/** 待機時間の警戒レベル */
-function waitLevel(d){ return d==null ? '' : (d>=60 ? 'alert' : (d>=30 ? 'warn' : '')); }
+const calcRow = r => rowCalc[r];
+const waitLevel = d => d==null ? '' : (d>=60 ? 'alert' : (d>=30 ? 'warn' : ''));
 
-/* ============================================================
-   描画
-   ============================================================ */
-function render(){
-  const cum = cumulative();
-  renderTable(cum);
-  renderCards(cum);
-  renderStats(cum);
-  save();
-}
-function escapeHtml(s){
-  return String(s).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-}
 /** セルの表示文字と付加クラス */
-function cellView(r, c, cum, cv){
+function cellView(r, c, cv){
   const o = rows[r], key = c.key;
   let txt='', cls='';
   if(c.type==='calc'){
     const d = cv[key];
     txt = fmtDur(d);
-    if(d!=null && d>720) cls += ' bad';                  // 12時間超＝入力ミスの可能性
+    if(d!=null && d>720) cls += ' bad';               // 12時間超＝入力ミスの可能性
     if(key==='d_wait'){ const lv=waitLevel(d); if(lv) cls += ' '+lv; }
   }else if(key==='cum'){
-    const e = cum[r];
-    txt = ((o.vol||'')!=='' || e.manual) ? String(round2(e.v)) : '';
-    if(!e.manual) cls += ' auto';
+    txt = ((o.vol||'')!=='' || cv.cumManual) ? String(round2(cv.cum)) : '';
+    if(!cv.cumManual) cls += ' auto';
   }else{
     txt = o[key] ?? '';
     if(c.type==='time'){
@@ -452,127 +446,281 @@ function cellView(r, c, cum, cv){
   return {txt, cls};
 }
 
-function renderTable(cum){
-  let h = '<colgroup><col style="width:34px">' +
-          COLS.map(c=>`<col style="width:${c.w}px">`).join('') + '</colgroup>';
-  h += '<thead><tr><th class="rowhead">No</th>' + COLS.map(c=>{
-    const g = c.type==='time' ? 'g-time' : (c.type==='calc' ? 'g-calc' : '');
-    return `<th class="${g}">${c.label}<span class="sub">${c.sub||'&nbsp;'}</span></th>`;
-  }).join('') + '</tr></thead><tbody>';
-
-  rows.forEach((o,r)=>{
-    const cv = calcRow(r);
-    h += `<tr><th class="rowhead" data-rowhead="${r}">${r+1}</th>`;
-    COLS.forEach((c,ci)=>{
-      const {txt, cls} = cellView(r, c, cum, cv);
-      const s = (sel.r===r && sel.c===ci) ? ' sel' : '';
-      h += `<td class="cell t-${c.type}${cls}${s}" data-r="${r}" data-c="${ci}">`+
-           `<span class="v">${escapeHtml(txt)}</span></td>`;
-    });
-    h += '</tr>';
-  });
-  gridEl.innerHTML = h + '</tbody>';
+/* ============================================================
+   表示中のビュー（表 or カード）
+   ============================================================ */
+function activeView(){
+  const v = document.body.dataset.view;
+  if(v==='table' || v==='cards') return v;
+  return mqNarrow.matches ? 'cards' : 'table';
+}
+/** 表示するビューだけを組み立てる（両方作ると更新が倍かかるため） */
+function ensureBuilt(){
+  const v = activeView();
+  if(v==='table'){
+    if(!built.table) buildTable();
+    if(built.cards) dropCards();
+  }else{
+    if(!built.cards) buildCards();
+    if(built.table) dropTable();
+  }
+  updateAll();
+}
+function dropTable(){ gridEl.textContent=''; tableRows=[]; built.table=false; }
+function dropCards(){ cardsEl.textContent=''; cardRows=[]; built.cards=false; }
+/** 行を増減したときだけ組み立て直す */
+function rebuild(){
+  if(!built.table && !built.cards){ ensureBuilt(); }
+  else{
+    if(built.table) buildTable();
+    if(built.cards) buildCards();
+    updateAll();
+  }
+  scheduleStats();
+  save();
 }
 
-function renderCards(cum){
-  let h = '';
-  rows.forEach((o,r)=>{
-    const cv = calcRow(r);
-    const volTxt = (o.vol||'')!=='' ? `${o.vol} m³` : '積載量';
-    const cumTxt = ((o.vol||'')!=='' || cum[r].manual) ? `累計 ${round2(cum[r].v)} m³` : '';
-    h += `<article class="card${sel.r===r?' is-sel':''}" data-r="${r}">
-      <div class="card-top">
-        <button class="tapfld f-no${(o.no||'')===''?' ph':''}" data-r="${r}" data-key="no">${escapeHtml(o.no||'No')}</button>
-        <button class="tapfld f-truck${(o.truck||'')===''?' ph':''}" data-r="${r}" data-key="truck">${escapeHtml(o.truck||'車両番号')}</button>
-        <button class="tapfld f-vol${(o.vol||'')===''?' ph':''}" data-r="${r}" data-key="vol">${escapeHtml(volTxt)}</button>
-        <button class="f-del" data-del="${r}" aria-label="この車を削除">✕</button>
-      </div>
-      <div class="chips">`;
-    TIME_COLS.forEach(c=>{
-      const {txt, cls} = cellView(r, c, cum, cv);
-      const on = (picker.open && picker.r===r && picker.key===c.key) ? ' on' : '';
-      h += `<button class="chip${txt===''?' empty':''}${cls}${on}" data-r="${r}" data-key="${c.key}">`+
-           `<span class="lb">${c.short}</span><span class="t">${escapeHtml(txt||'―')}</span></button>`;
+/* ---- 表の組み立て ---- */
+function buildTable(){
+  gridEl.textContent='';
+  const cg = el('colgroup');
+  const addCol = w => { const c=el('col'); c.style.width=w+'px'; cg.appendChild(c); };
+  addCol(34); COLS.forEach(c=>addCol(c.w));
+  gridEl.appendChild(cg);
+
+  const thead = el('thead'), htr = el('tr');
+  htr.appendChild(el('th','rowhead','No'));
+  COLS.forEach(c=>{
+    const th = el('th', c.type==='time' ? 'g-time' : (c.type==='calc' ? 'g-calc' : ''));
+    th.appendChild(document.createTextNode(c.label));
+    th.appendChild(el('span','sub', c.sub || ' '));
+    htr.appendChild(th);
+  });
+  thead.appendChild(htr); gridEl.appendChild(thead);
+
+  const tb = el('tbody');
+  tableRows = rows.map((o,r)=>{
+    const tr = el('tr');
+    const th = el('th','rowhead', String(r+1));
+    th.dataset.rowhead = r;
+    tr.appendChild(th);
+    const tds = {};
+    COLS.forEach(c=>{
+      const td = el('td');
+      td.dataset.r = r; td.dataset.key = c.key;
+      td.appendChild(el('span','v'));
+      tds[c.key] = td;
+      tr.appendChild(td);
     });
-    h += '</div><div class="card-metrics">';
-    if(cumTxt) h += `<span class="mtr">${cumTxt}</span>`;
+    tb.appendChild(tr);
+    return {tr, tds};
+  });
+  gridEl.appendChild(tb);
+  built.table = true;
+}
+
+/* ---- カードの組み立て ---- */
+function buildCards(){
+  cardsEl.textContent='';
+  const frag = document.createDocumentFragment();
+  cardRows = rows.map((o,r)=>{
+    const art = el('article','card');
+    art.dataset.r = r;
+    const top = el('div','card-top');
+    const cells = {};
+    CARD_FLDS.forEach(key=>{
+      const b = el('button','tapfld f-'+(key==='no'?'no':key==='truck'?'truck':'vol'));
+      b.type='button'; b.dataset.r=r; b.dataset.key=key;
+      b.appendChild(el('span','txt'));
+      cells[key] = b;
+      top.appendChild(b);
+    });
+    const del = el('button','f-del','✕');
+    del.type='button'; del.dataset.del=r; del.setAttribute('aria-label','この車を削除');
+    top.appendChild(del);
+    art.appendChild(top);
+
+    const chips = el('div','chips');
+    TIME_COLS.forEach(c=>{
+      const b = el('button','chip');
+      b.type='button'; b.dataset.r=r; b.dataset.key=c.key;
+      b.appendChild(el('span','lb', c.short));
+      b.appendChild(el('span','t'));
+      cells[c.key] = b;
+      chips.appendChild(b);
+    });
+    art.appendChild(chips);
+
+    const mtr = el('div','card-metrics');
+    art.appendChild(mtr);
+
+    const memo = el('button','card-memo');
+    memo.type='button'; memo.dataset.r=r; memo.dataset.key='memo';
+    memo.appendChild(el('span','txt'));
+    cells.memo = memo;
+    art.appendChild(memo);
+
+    frag.appendChild(art);
+    return {art, cells, mtr};
+  });
+  cardsEl.appendChild(frag);
+  built.cards = true;
+}
+
+/* ============================================================
+   更新（変更のあった箇所だけ書き換える）
+   ============================================================ */
+function setText(node, txt){ if(node.textContent!==txt) node.textContent = txt; }
+function setCls(node, cls){ if(node.className!==cls) node.className = cls; }
+
+function updateRow(r){
+  const o = rows[r], cv = calcRow(r);
+  const isSel = sel.r===r;
+
+  const T = tableRows[r];
+  if(T){
+    COLS.forEach(c=>{
+      const td = T.tds[c.key];
+      const {txt, cls} = cellView(r, c, cv);
+      if(!(editing && editing.r===r && editing.key===c.key)) setText(td.firstChild, txt);
+      setCls(td, `cell t-${c.type}${cls}${isSel && sel.key===c.key ? ' sel' : ''}`);
+    });
+  }
+  const C = cardRows[r];
+  if(C){
+    setCls(C.art, 'card' + (isSel ? ' is-sel' : ''));
+    CARD_FLDS.concat('memo').forEach(key=>{
+      if(editing && editing.r===r && editing.key===key) return;
+      const c = COL[key], b = C.cells[key];
+      const raw = (o[key]||'');
+      const txt = raw==='' ? c.ph : raw + (c.unit||'');
+      setText(b.firstChild, txt);
+      const base = key==='memo' ? 'card-memo' : 'tapfld f-'+key;
+      setCls(b, base + (raw==='' ? ' ph' : ''));
+    });
+    TIME_COLS.forEach(c=>{
+      if(editing && editing.r===r && editing.key===c.key) return;
+      const b = C.cells[c.key];
+      const {txt, cls} = cellView(r, c, cv);
+      setText(b.lastChild, txt || '―');
+      setCls(b, 'chip'+(txt==='' ? ' empty' : '')+cls+
+                (picker.open && picker.r===r && picker.key===c.key ? ' on' : ''));
+    });
+    // 所要時間の表示（変化したときだけ作り直す）
+    const parts = [];
+    if((o.vol||'')!=='' || cv.cumManual) parts.push(['','累計 '+round2(cv.cum)+' m³']);
     CARD_MTRS.forEach(k=>{
       const d = cv[k];
       if(d==null) return;
-      const lv = k==='d_wait' ? waitLevel(d) : '';
-      h += `<span class="mtr ${lv}">${COL[k].m}<b>${fmtDur(d)}</b></span>`;
+      parts.push([k==='d_wait' ? waitLevel(d) : '', COL[k].m, fmtDur(d)]);
     });
-    h += `</div>
-      <button class="card-memo${(o.memo||'')===''?' ph':''}" data-r="${r}" data-key="memo">${escapeHtml(o.memo||'備考')}</button>
-    </article>`;
-  });
-  cardsEl.innerHTML = h;
+    const sig = parts.map(a=>a.join('')).join('');
+    if(C.mtr.dataset.sig !== sig){
+      C.mtr.dataset.sig = sig;
+      C.mtr.textContent = '';
+      parts.forEach(([lv, label, val])=>{
+        const s = el('span','mtr'+(lv?' '+lv:''), label);
+        if(val!=null) s.appendChild(el('b', null, val));
+        C.mtr.appendChild(s);
+      });
+    }
+  }
+}
+function updateAll(){
+  recompute();
+  for(let r=0;r<rows.length;r++) updateRow(r);
 }
 
-/* ---- 集計 ---- */
-const COUNT_KEYS = ['truck','vol','depart','arrive','ustart','uend','back'];
-function avgOf(list){ return list.length ? Math.round(list.reduce((a,b)=>a+b,0)/list.length) : null; }
-function valid(key){ return rows.map((_,r)=>calcRow(r)[key]).filter(v=>v!=null && v<=720); }
-/** 連続する時刻の間隔（出荷ピッチ・打設ピッチ） */
-function pitches(key){
-  const ts = rows.map(o=>parseTime(o[key])).filter(v=>v!=null);
+/** データ変更後：影響する行だけ更新し、集計と保存を予約する */
+function refresh(from=0){
+  recompute();
+  for(let r=Math.max(0,from); r<rows.length; r++) updateRow(r);
+  scheduleStats();
+  save();
+}
+/** 1か所の変更を反映（累計・出荷間隔に響く項目だけ後続行も更新） */
+function changed(r, key){
+  if(CASCADE.has(key)){ refresh(r); return; }
+  recompute();
+  updateRow(r);
+  scheduleStats();
+  save();
+}
+let statsTimer = null;
+function scheduleStats(){
+  if(statsTimer) return;
+  statsTimer = requestAnimationFrame(()=>{ statsTimer=null; renderStats(); });
+}
+
+/* ============================================================
+   集計
+   ============================================================ */
+const avgOf = a => a.length ? Math.round(a.reduce((x,y)=>x+y,0)/a.length) : null;
+function validDur(key){
   const out = [];
-  for(let i=1;i<ts.length;i++){ const d=span(ts[i-1], ts[i]); if(d!=null && d<=720) out.push(d); }
+  for(let r=0;r<rowCalc.length;r++){ const d=rowCalc[r][key]; if(d!=null && d<=720) out.push(d); }
   return out;
 }
-
-function renderStats(cum){
+/** 連続する時刻の間隔（出荷ピッチ・打設ピッチ） */
+function pitches(key){
+  const out = []; let prev = null;
+  for(let r=0;r<rowCalc.length;r++){
+    const t = rowCalc[r][key];
+    if(t==null) continue;
+    if(prev!=null){ const d=span(prev,t); if(d!=null && d<=720) out.push(d); }
+    prev = t;
+  }
+  return out;
+}
+function renderStats(){
   const filled = rows.filter(o=>COUNT_KEYS.some(k=>(o[k]||'')!==''));
   const maxOf = a => a.length ? Math.max(...a) : null;
 
-  let shipped = 0, poured = 0;
-  rows.forEach(o=>{
-    const v = parseFloat(o.vol); if(isNaN(v)) return;
-    if(parseTime(o.depart)!=null) shipped += v;
-    if(parseTime(o.uend)!=null)   poured  += v;
+  let shipped = 0, poured = 0, firstStart = null, lastEnd = null;
+  rows.forEach((o,r)=>{
+    const c = rowCalc[r];
+    const v = parseFloat(o.vol);
+    if(!isNaN(v)){
+      if(c.dep!=null) shipped += v;
+      if(c.ue!=null)  poured  += v;
+    }
+    if(c.us!=null && (firstStart==null || c.us<firstStart)) firstStart = c.us;
+    if(c.ue!=null && (lastEnd==null   || c.ue>lastEnd))     lastEnd   = c.ue;
   });
-  const total = cum.length ? cum[cum.length-1].v : 0;
 
-  const starts = rows.map(o=>parseTime(o.ustart)).filter(v=>v!=null);
-  const ends   = rows.map(o=>parseTime(o.uend)).filter(v=>v!=null);
   let elapsed=null, pace=null;
-  if(starts.length && ends.length){
-    elapsed = span(Math.min(...starts), Math.max(...ends));
+  if(firstStart!=null && lastEnd!=null){
+    elapsed = span(firstStart, lastEnd);
     if(elapsed>0 && poured>0) pace = poured/(elapsed/60);
   }
   const plan = parseFloat($('h_plan').value);
   const prog = (!isNaN(plan) && plan>0) ? Math.round(poured/plan*1000)/10 : null;
   const rest = (!isNaN(plan) && plan>0) ? round2(Math.max(0, plan-shipped)) : null;
 
-  const shipPitch = avgOf(pitches('depart'));
-  const pourPitch = avgOf(pitches('ustart'));
-  const turn      = valid('d_turn');
-  const waits     = valid('d_wait');
-
+  const turn = validDur('d_turn'), waits = validDur('d_wait');
   const cards = [
     ['台数',        filled.length, '台', ''],
     ['出荷数量',    round2(shipped), 'm³', ''],
     ['打設済数量',  round2(poured),  'm³', ''],
     ['未出荷',      rest==null?'―':rest, rest==null?'':'m³', ''],
     ['進捗率',      prog==null?'―':prog, prog==null?'':'%', ''],
-    ['平均出荷ピッチ', fmtDur(shipPitch)||'―', '', 'key'],
+    ['平均出荷ピッチ', fmtDur(avgOf(pitches('dep')))||'―', '', 'key'],
     ['平均回転時間',   fmtDur(avgOf(turn))||'―', '', 'key'],
     ['最短／最長回転', turn.length ? `${fmtDur(Math.min(...turn))} / ${fmtDur(Math.max(...turn))}` : '―', '', ''],
-    ['平均輸送時間',   fmtDur(avgOf(valid('d_tr')))||'―', '', ''],
+    ['平均輸送時間',   fmtDur(avgOf(validDur('d_tr')))||'―', '', ''],
     ['平均待機時間',   fmtDur(avgOf(waits))||'―', '', ''],
     ['最大待機時間',   fmtDur(maxOf(waits))||'―', '', waitLevel(maxOf(waits))==='alert'?'key':''],
-    ['平均荷卸時間',   fmtDur(avgOf(valid('d_unld')))||'―', '', ''],
-    ['打設ピッチ',     fmtDur(pourPitch)||'―', '', ''],
+    ['平均荷卸時間',   fmtDur(avgOf(validDur('d_unld')))||'―', '', ''],
+    ['打設ピッチ',     fmtDur(avgOf(pitches('us')))||'―', '', ''],
     ['打設所要時間',   fmtDur(elapsed)||'―', '', 'key'],
     ['打設ペース',     pace==null?'―':Math.round(pace*10)/10, pace==null?'':'m³/h', 'key'],
   ];
-  $('stats').innerHTML = cards.map(([k,n,u,cls])=>
+  const html = cards.map(([k,n,u,cls])=>
     `<div class="stat ${cls}"><span class="k">${k}</span><span class="n">${n}${u?`<small>${u}</small>`:''}</span></div>`
   ).join('');
-
+  if($('stats').innerHTML !== html) $('stats').innerHTML = html;
   renderTrucks();
 }
-
 /** 車両別の回転時間 */
 function renderTrucks(){
   const map = new Map();
@@ -580,137 +728,153 @@ function renderTrucks(){
     const name = (o.truck||'').trim();
     if(!name) return;
     if(!map.has(name)) map.set(name, {n:0, vol:0, turn:[], wait:[]});
-    const e = map.get(name);
-    const cv = calcRow(r);
-    if(parseTime(o.depart)!=null) e.n++;
-    const v = parseFloat(o.vol); if(!isNaN(v) && parseTime(o.depart)!=null) e.vol += v;
+    const e = map.get(name), cv = rowCalc[r];
+    if(cv.dep!=null){
+      e.n++;
+      const v = parseFloat(o.vol); if(!isNaN(v)) e.vol += v;
+    }
     if(cv.d_turn!=null && cv.d_turn<=720) e.turn.push(cv.d_turn);
     if(cv.d_wait!=null && cv.d_wait<=720) e.wait.push(cv.d_wait);
   });
+  let html;
   if(!map.size){
-    $('trucks').innerHTML = '<tbody><tr><td style="text-align:left;color:#868f9a;">車両番号を入力すると、車両ごとの回転時間を集計します。</td></tr></tbody>';
-    return;
+    html = '<tbody><tr><td style="text-align:left;color:#868f9a;">車両番号を入力すると、車両ごとの回転時間を集計します。</td></tr></tbody>';
+  }else{
+    html = '<thead><tr><th style="text-align:left">車両番号</th><th>運搬回数</th><th>運搬量</th>'+
+           '<th>平均回転</th><th>最短</th><th>最長</th><th>平均待機</th></tr></thead><tbody>';
+    map.forEach((e,name)=>{
+      html += `<tr><td>${escapeHtml(name)}</td><td>${e.n}</td><td>${round2(e.vol)}</td>`+
+              `<td>${fmtDur(avgOf(e.turn))||'―'}</td>`+
+              `<td>${e.turn.length?fmtDur(Math.min(...e.turn)):'―'}</td>`+
+              `<td>${e.turn.length?fmtDur(Math.max(...e.turn)):'―'}</td>`+
+              `<td>${fmtDur(avgOf(e.wait))||'―'}</td></tr>`;
+    });
+    html += '</tbody>';
   }
-  let h = '<thead><tr><th style="text-align:left">車両番号</th><th>運搬回数</th><th>運搬量</th>'+
-          '<th>平均回転</th><th>最短</th><th>最長</th><th>平均待機</th></tr></thead><tbody>';
-  [...map.entries()].forEach(([name,e])=>{
-    h += `<tr><td>${escapeHtml(name)}</td><td>${e.n}</td><td>${round2(e.vol)}</td>`+
-         `<td>${fmtDur(avgOf(e.turn))||'―'}</td>`+
-         `<td>${e.turn.length?fmtDur(Math.min(...e.turn)):'―'}</td>`+
-         `<td>${e.turn.length?fmtDur(Math.max(...e.turn)):'―'}</td>`+
-         `<td>${fmtDur(avgOf(e.wait))||'―'}</td></tr>`;
-  });
-  $('trucks').innerHTML = h + '</tbody>';
+  if($('trucks').innerHTML !== html) $('trucks').innerHTML = html;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 }
 
 /* ============================================================
-   セル選択・移動（表）
+   選択
    ============================================================ */
-function cellEl(r,c){ return gridEl.querySelector(`td.cell[data-r="${r}"][data-c="${c}"]`); }
-
-function select(r,c,{scroll=true}={}){
+function hostOf(r, key){
+  const T = tableRows[r]; if(T) return T.tds[key];
+  const C = cardRows[r];  if(C) return C.cells[key];
+  return null;
+}
+function select(r, key, {scroll=false}={}){
   r = Math.max(0, Math.min(rows.length-1, r));
-  c = Math.max(0, Math.min(COLS.length-1, c));
-  gridEl.querySelectorAll('td.sel').forEach(td=>td.classList.remove('sel'));
-  sel = {r,c};
-  const td = cellEl(r,c);
-  if(td){
-    td.classList.add('sel');
-    if(scroll) td.scrollIntoView({block:'nearest', inline:'nearest'});
+  const prev = sel;
+  sel = {r, key};
+  if(prev.r!==r) updateRow(prev.r);
+  updateRow(r);
+  if(scroll){
+    const host = hostOf(r, key);
+    if(host) host.scrollIntoView({block:'nearest', inline:'nearest'});
   }
 }
-function move(dr,dc){
+function move(dr, dc){
   closePicker(); commitEdit();
-  let r=sel.r+dr, c=sel.c+dc;
+  let r = sel.r, c = KEY_INDEX[sel.key] + dc;
+  r += dr;
   if(c<0){ c=COLS.length-1; r--; }
   if(c>COLS.length-1){ c=0; r++; }
   if(r<0) r=0;
-  if(r>rows.length-1){ if(dr>0||dc>0) addRow(); r=Math.min(r, rows.length-1); }
-  select(r,c);
+  if(r>rows.length-1){ if(dr>0||dc>0){ addRow(); } r=Math.min(r, rows.length-1); }
+  select(r, COLS[c].key, {scroll:true});
 }
 
 /* ============================================================
-   編集（文字入力モード）— 表・カード共通
+   編集（文字入力モード）
    ============================================================ */
-/** host はセレクタで受け取る（commitEdit の再描画で要素が入れ替わるため、確定後に取り直す） */
-function beginEditAt(hostSel, r, key, initial){
+function beginEdit(r, key, initial){
   const col = COL[key];
   if(!col || col.type==='calc') return;
-  closePicker(); commitEdit();
-  const host = typeof hostSel==='string' ? document.querySelector(hostSel) : hostSel;
-  if(!host || !host.isConnected) return;
-  const cur = rows[r][key] ?? '';
-  const inp = document.createElement('input');
-  inp.className = 'editor';
+  closePicker();
+  if(editing && editing.r===r && editing.key===key){ editing.input.focus(); return; }
+  commitEdit();
+  const host = hostOf(r, key);
+  if(!host) return;
+
+  const inp = el('input','editor');
   inp.type = 'text';
+  inp.autocomplete = 'off';
   if(col.type==='num') inp.inputMode='decimal';
   else if(col.type==='time') inp.inputMode='numeric';
-  inp.value = (initial!=null && initial!=='') ? initial : cur;
-  host.innerHTML=''; host.appendChild(inp);
+  inp.value = (initial!=null && initial!=='') ? initial : (rows[r][key] ?? '');
+
+  const hidden = [];
+  [...host.children].forEach(ch=>{ if(ch.style.display!=='none'){ ch.style.display='none'; hidden.push(ch); } });
+  host.appendChild(inp);
+  editing = {r, key, input:inp, host, hidden};
+  sel = {r, key};
+
   inp.focus();
   if(initial!=null && initial!=='') inp.setSelectionRange(inp.value.length, inp.value.length);
   else inp.select();
-  editing = {r, key, input:inp};
 
   inp.addEventListener('keydown', e=>{
-    if(e.key==='Enter'){ e.preventDefault(); const t=inTable(); commitEdit(); if(t) move(1,0); }
-    else if(e.key==='Escape'){ e.preventDefault(); cancelEdit(); }
-    else if(e.key==='Tab'){ e.preventDefault(); const t=inTable(); commitEdit(); if(t) move(0, e.shiftKey?-1:1); }
     e.stopPropagation();
+    if(e.key==='Enter'){ e.preventDefault(); const t=tableRows.length>0; commitEdit(); if(t) move(1,0); }
+    else if(e.key==='Escape'){ e.preventDefault(); cancelEdit(); }
+    else if(e.key==='Tab'){ e.preventDefault(); const t=tableRows.length>0; commitEdit(); if(t) move(0, e.shiftKey?-1:1); }
   });
-  // blur による確定は一拍遅らせる。即座に再描画すると、次に押した枠が
-  // クリックが届く前に作り直され、最初のタップが効かなくなるため
+  // blur による確定は一拍遅らせる（次に押した枠のタップを取りこぼさないため）
   inp.addEventListener('blur', ()=>{
     setTimeout(()=>{ if(editing && editing.input===inp) commitEdit(); }, 0);
   });
-  function inTable(){ return !!host.closest('table.grid'); }
 }
-function beginEdit(r,c,initial){
-  beginEditAt(`td.cell[data-r="${r}"][data-c="${c}"]`, r, COLS[c].key, initial);
+function closeEditor(){
+  if(!editing) return null;
+  const {host, input, hidden} = editing;
+  if(input.parentNode===host) host.removeChild(input);
+  hidden.forEach(ch=>{ ch.style.display=''; });
+  const e = editing;
+  editing = null;
+  return e;
 }
-
 function commitEdit(){
   if(!editing) return;
   const {r, key, input} = editing;
   let v = input.value.trim();
   if(COL[key].type==='time'){
     const p = parseTime(v);
-    if(p!=null) v = fmtTime(p);        // 9 ／ 934 ／ 9:34 → 09:34 に整形
+    if(p!=null) v = fmtTime(p);            // 9 ／ 934 ／ 9:34 → 09:34 に整形
   }
-  editing = null;
+  closeEditor();
+  if(rows[r][key] === v){ updateRow(r); return; }
   rows[r][key] = v;
-  render();
-  select(sel.r, sel.c, {scroll:false});
+  changed(r, key);
 }
 function cancelEdit(){
   if(!editing) return;
-  editing = null;
-  render();
-  select(sel.r, sel.c, {scroll:false});
+  const {r} = editing;
+  closeEditor();
+  updateRow(r);
 }
 
 /* ============================================================
-   時刻ピッカー（枠を押すと現在時刻の候補）
+   時刻ピッカー
    ============================================================ */
 const OFFSETS = [0,-1,-2,-3,-5,-10];
 
-function openPicker(r, key, anchorSel){
+function openPicker(r, key){
   commitEdit();
   const base = nowMin();
   picker.items = OFFSETS.map(off=>({min:(base+off+1440)%1440, off}));
-  picker.open=true; picker.r=r; picker.key=key; picker.anchor=anchorSel; picker.idx=0;
+  picker.open=true; picker.r=r; picker.key=key; picker.idx=0;
   drawPicker();
   pickerEl.style.display='block';
-  document.querySelectorAll('.chip.on').forEach(el=>el.classList.remove('on'));
-  const a = document.querySelector(anchorSel);
-  if(a && a.classList.contains('chip')) a.classList.add('on');
+  updateRow(r);
   positionPicker();
 }
-/** 対象の枠に追従（スクロールしても閉じない） */
 function positionPicker(){
   if(!picker.open) return;
-  const a = document.querySelector(picker.anchor);
-  if(!a){ closePicker(); return; }
+  const a = hostOf(picker.r, picker.key);
+  if(!a || !a.isConnected){ closePicker(); return; }
   const rect = a.getBoundingClientRect();
   const wrap = a.closest('.grid-wrap');
   if(wrap){
@@ -729,122 +893,109 @@ function positionPicker(){
   pickerEl.style.left = Math.max(4, left) + window.scrollX + 'px';
   pickerEl.style.top  = Math.max(4, top)  + window.scrollY + 'px';
 }
+let posTimer = null;
+function schedulePosition(){
+  if(!picker.open || posTimer) return;
+  posTimer = requestAnimationFrame(()=>{ posTimer=null; positionPicker(); });
+}
 function drawPicker(){
-  const cur = rows[picker.r][picker.key] || '';
   const o = rows[picker.r];
+  const cur = o[picker.key] || '';
   const who = (o.truck||'').trim() || (o.no ? `納入番号 ${o.no}` : '');
   let h = `<div class="pk-head">${COL[picker.key].label}${who?`　${escapeHtml(who)}`:''}`+
           `${cur?`<br>現在の入力：${escapeHtml(cur)}`:''}</div>`;
   picker.items.forEach((it,i)=>{
     if(it.off===0){
-      h += `<button data-i="${i}" class="now${i===picker.idx?' on':''}">現在時刻　${fmtTime(it.min)}</button>`;
+      h += `<button type="button" data-i="${i}" class="now${i===picker.idx?' on':''}">現在時刻　${fmtTime(it.min)}</button>`;
       h += '<div class="pk-sep"></div>';
     }else{
-      h += `<button data-i="${i}" class="${i===picker.idx?'on':''}">`+
+      h += `<button type="button" data-i="${i}" class="${i===picker.idx?'on':''}">`+
            `<span class="t">${fmtTime(it.min)}</span><span class="lbl">${-it.off}分前</span></button>`;
     }
   });
   h += '<div class="pk-sep"></div>'+
-       '<button data-act="manual">✎ 手入力する…</button>'+
-       '<button data-act="clear">✕ 消去</button>'+
+       '<button type="button" data-act="manual">✎ 手入力する…</button>'+
+       '<button type="button" data-act="clear">✕ 消去</button>'+
        '<div class="pk-foot">数字を打つとそのまま手入力モード<br>Enter…選択　Esc…閉じる</div>';
   pickerEl.innerHTML = h;
 }
 function closePicker(){
   if(!picker.open) return;
-  picker.open=false;
-  pickerEl.style.display='none';
-  document.querySelectorAll('.chip.on').forEach(el=>el.classList.remove('on'));
+  const r = picker.r;
+  picker.open = false;
+  pickerEl.style.display = 'none';
+  updateRow(r);
 }
-function applyPicker(i){
-  const {r, key} = picker;
-  rows[r][key] = fmtTime(picker.items[i].min);
-  closePicker();
-  render();
-  select(sel.r, sel.c, {scroll:false});
+function setTime(r, key, value){
+  if(rows[r][key] === value) return;
+  rows[r][key] = value;
+  changed(r, key);
 }
 
 pickerEl.addEventListener('mousedown', e=>{
   const b = e.target.closest('button');
   if(!b) return;
   e.preventDefault();
-  const {r, key, anchor} = picker;
-  if(b.dataset.act==='manual'){
-    closePicker();
-    beginEditAt(anchor, r, key);
-    return;
-  }
-  if(b.dataset.act==='clear'){
-    rows[r][key]=''; closePicker(); render(); select(sel.r, sel.c, {scroll:false}); return;
-  }
-  applyPicker(+b.dataset.i);
+  const {r, key} = picker;
+  if(b.dataset.act==='manual'){ closePicker(); beginEdit(r, key); return; }
+  if(b.dataset.act==='clear'){  closePicker(); setTime(r, key, ''); return; }
+  const it = picker.items[+b.dataset.i];
+  closePicker();
+  setTime(r, key, fmtTime(it.min));
 });
 
 /* ============================================================
-   入力イベント
+   操作
    ============================================================ */
-/** ヘッダー欄などにフォーカスが残らないよう表側へ移す */
-function focusGrid(){
-  const a = document.activeElement;
-  if(a && a.classList && a.classList.contains('editor')) return;
-  if(a && a.blur) a.blur();
+function onPress(r, key){
+  const col = COL[key];
+  if(!col || col.type==='calc') return;
+  const wasOpen = picker.open && picker.r===r && picker.key===key;
+  closePicker();
+  if(col.type==='time'){
+    commitEdit();
+    select(r, key);
+    if(!wasOpen) openPicker(r, key);
+  }else{
+    beginEdit(r, key);        // 1回押すだけで入力欄が開く（日本語入力もそのまま）
+  }
 }
-
-/* --- 表 --- */
-gridEl.addEventListener('mousedown', e=>{
+function onGridPress(e){
   const rh = e.target.closest('th[data-rowhead]');
-  if(rh){ commitEdit(); closePicker(); $('gridWrap').focus({preventScroll:true}); select(+rh.dataset.rowhead, 0); return; }
-  const td = e.target.closest('td.cell');
+  if(rh){ commitEdit(); closePicker(); select(+rh.dataset.rowhead, 'no'); return; }
+  const td = e.target.closest('td[data-key]');
   if(!td) return;
-  const r=+td.dataset.r, c=+td.dataset.c;
-  if(editing && editing.r===r && editing.key===COLS[c].key) return;
+  const r = +td.dataset.r, key = td.dataset.key;
+  if(editing && editing.r===r && editing.key===key) return;
   e.preventDefault();
   $('gridWrap').focus({preventScroll:true});
-  commitEdit();
-  const wasOpen = picker.open && picker.r===r && picker.key===COLS[c].key;
+  onPress(r, key);
+}
+gridEl.addEventListener('mousedown', onGridPress);
+gridEl.addEventListener('dblclick', e=>{        // 時刻セルもダブルクリックで手入力
+  const td = e.target.closest('td[data-key]');
+  if(!td) return;
+  const key = td.dataset.key;
+  if(COL[key].type==='calc') return;
   closePicker();
-  select(r,c);
-  if(COLS[c].type==='time'){
-    if(!wasOpen) openPicker(r, COLS[c].key, `td.cell[data-r="${r}"][data-c="${c}"]`);
-  }else if(COLS[c].type!=='calc'){
-    beginEdit(r,c);        // 1クリックで入力欄を開く（日本語入力もそのまま始められる）
-  }
-});
-gridEl.addEventListener('dblclick', e=>{
-  const td = e.target.closest('td.cell');
-  if(td) beginEdit(+td.dataset.r, +td.dataset.c);
+  beginEdit(+td.dataset.r, key);
 });
 
-/* --- カード --- */
 cardsEl.addEventListener('click', e=>{
   if(e.target.closest('input.editor')) return;
   const del = e.target.closest('[data-del]');
   if(del){ deleteRow(+del.dataset.del); return; }
-
-  const chip = e.target.closest('.chip');
-  if(chip){
-    const r=+chip.dataset.r, key=chip.dataset.key;
-    focusGrid(); commitEdit();
-    const wasOpen = picker.open && picker.r===r && picker.key===key;
-    closePicker();
-    sel = {r, c:KEY_INDEX[key]};
-    if(!wasOpen) openPicker(r, key, `.chip[data-r="${r}"][data-key="${key}"]`);
-    return;
-  }
-  const fld = e.target.closest('.tapfld, .card-memo');
-  if(fld){
-    const r=+fld.dataset.r, key=fld.dataset.key;
-    const base = fld.classList.contains('card-memo') ? '.card-memo' : '.tapfld';
-    focusGrid(); closePicker();
-    sel = {r, c:KEY_INDEX[key]};
-    beginEditAt(`${base}[data-r="${r}"][data-key="${key}"]`, r, key);
-  }
+  const b = e.target.closest('button[data-key]');
+  if(!b) return;
+  const r = +b.dataset.r, key = b.dataset.key;
+  if(editing && editing.r===r && editing.key===key) return;
+  onPress(r, key);
 });
 
 document.addEventListener('mousedown', e=>{
   if(!picker.open) return;
   if(pickerEl.contains(e.target)) return;
-  if(e.target.closest('td.cell') || e.target.closest('.chip')) return;
+  if(e.target.closest('td[data-key]') || e.target.closest('.chip')) return;
   closePicker();
 });
 
@@ -853,52 +1004,53 @@ document.addEventListener('keydown', e=>{
   const tag = (e.target.tagName||'').toLowerCase();
   if(tag==='input' && !e.target.classList.contains('editor')) return;   // ヘッダー入力中
 
-  /* --- 候補表示中 --- */
   if(picker.open){
-    if(e.key==='ArrowDown'){ e.preventDefault(); picker.idx=(picker.idx+1)%picker.items.length; drawPicker(); return; }
-    if(e.key==='ArrowUp'){   e.preventDefault(); picker.idx=(picker.idx-1+picker.items.length)%picker.items.length; drawPicker(); return; }
-    if(e.key==='Enter'){     e.preventDefault(); applyPicker(picker.idx); return; }
-    if(e.key==='Escape'){    e.preventDefault(); closePicker(); return; }
-    if(e.key==='Tab'){       e.preventDefault(); closePicker(); move(0, e.shiftKey?-1:1); return; }
+    const n = picker.items.length;
+    if(e.key==='ArrowDown'){ e.preventDefault(); picker.idx=(picker.idx+1)%n; drawPicker(); return; }
+    if(e.key==='ArrowUp'){   e.preventDefault(); picker.idx=(picker.idx-1+n)%n; drawPicker(); return; }
+    if(e.key==='Enter'){
+      e.preventDefault();
+      const {r,key}=picker, it=picker.items[picker.idx];
+      closePicker(); setTime(r, key, fmtTime(it.min)); return;
+    }
+    if(e.key==='Escape'){ e.preventDefault(); closePicker(); return; }
+    if(e.key==='Tab'){    e.preventDefault(); closePicker(); move(0, e.shiftKey?-1:1); return; }
     if(e.key==='Delete'||e.key==='Backspace'){
       e.preventDefault();
-      rows[picker.r][picker.key]='';
-      closePicker(); render(); select(sel.r, sel.c, {scroll:false}); return;
+      const {r,key}=picker; closePicker(); setTime(r, key, ''); return;
     }
     // 入力しようとした ＝ 現在時刻ではないと判断 → 文字入力モードへ
     if(e.key.length===1 && !e.ctrlKey && !e.metaKey && !e.altKey){
       e.preventDefault();
-      const {r, key, anchor} = picker;
+      const {r,key}=picker;
       closePicker();
-      beginEditAt(anchor, r, key, e.key);
+      beginEdit(r, key, e.key);
       return;
     }
     return;
   }
 
-  /* --- 表のセル選択中 --- */
-  if(!cellEl(sel.r, sel.c)) return;
+  if(!tableRows.length) return;              // 表を表示していないときは何もしない
   switch(e.key){
     case 'ArrowUp':    e.preventDefault(); move(-1,0); return;
     case 'ArrowDown':  e.preventDefault(); move(1,0);  return;
     case 'ArrowLeft':  e.preventDefault(); move(0,-1); return;
     case 'ArrowRight': e.preventDefault(); move(0,1);  return;
     case 'Tab':        e.preventDefault(); move(0, e.shiftKey?-1:1); return;
-    case 'Enter':
-      e.preventDefault();
-      if(COLS[sel.c].type==='time') openPicker(sel.r, COLS[sel.c].key, `td.cell[data-r="${sel.r}"][data-c="${sel.c}"]`);
-      else beginEdit(sel.r, sel.c);
-      return;
-    case 'F2': e.preventDefault(); beginEdit(sel.r, sel.c); return;
+    case 'Enter':      e.preventDefault(); onPress(sel.r, sel.key); return;
+    case 'F2':         e.preventDefault(); beginEdit(sel.r, sel.key); return;
     case 'Delete': case 'Backspace':
       e.preventDefault();
-      if(COLS[sel.c].type!=='calc'){ rows[sel.r][COLS[sel.c].key]=''; render(); select(sel.r,sel.c,{scroll:false}); }
+      if(COL[sel.key].type!=='calc' && rows[sel.r][sel.key]!==''){
+        rows[sel.r][sel.key]='';
+        changed(sel.r, sel.key);
+      }
       return;
     case 'Escape': closePicker(); return;
   }
   if(e.key.length===1 && !e.ctrlKey && !e.metaKey && !e.altKey){
     e.preventDefault();
-    beginEdit(sel.r, sel.c, e.key);
+    beginEdit(sel.r, sel.key, e.key);
   }
 });
 
@@ -912,7 +1064,7 @@ function nextNo(){
 }
 function addRow(n=1){
   for(let i=0;i<n;i++) rows.push(newRow(nextNo()));
-  render();
+  rebuild();
 }
 function deleteRow(r){
   commitEdit(); closePicker();
@@ -922,32 +1074,39 @@ function deleteRow(r){
   if(has && !confirm(`${name} の記録を削除します。よろしいですか？`)) return;
   rows.splice(r,1);
   if(!rows.length) rows=[newRow(1)];
-  render();
-  select(Math.min(r, rows.length-1), sel.c);
+  if(sel.r>=rows.length) sel.r = rows.length-1;
+  rebuild();
 }
 $('btnAdd').onclick = ()=>{
   commitEdit(); closePicker();
   addRow(1);
   const r = rows.length-1;
-  select(r, KEY_INDEX.truck);
-  const card = cardsEl.querySelector(`.card[data-r="${r}"]`);
-  if(card && cardsEl.offsetParent!==null) card.scrollIntoView({block:'center', behavior:'smooth'});
+  select(r, 'truck');
+  const host = hostOf(r, 'truck');
+  if(host) host.scrollIntoView({block:'center', behavior:'smooth'});
 };
 $('btnAdd5').onclick   = ()=>{ commitEdit(); closePicker(); addRow(5); };
 $('btnInsert').onclick = ()=>{
   commitEdit(); closePicker();
   rows.splice(sel.r+1, 0, newRow(''));
-  render(); select(sel.r+1, 0);
+  rebuild();
+  select(sel.r+1, 'no');
 };
 $('btnDel').onclick   = ()=>deleteRow(sel.r);
-$('btnPrint').onclick = ()=>{ commitEdit(); closePicker(); window.print(); };
+$('btnPrint').onclick = ()=>{
+  commitEdit(); closePicker();
+  if(!built.table){ buildTable(); updateAll(); }   // 印刷は表の体裁で
+  window.print();
+  ensureBuilt();                                   // 印刷用に組んだ分を片づける
+};
 $('btnClear').onclick = ()=>{
   commitEdit(); closePicker();
   if(!confirm('入力内容をすべて消去します。よろしいですか？')) return;
   HEAD_IDS.forEach(id=>{ $(id).value=''; });
   $('h_date').value = new Date().toISOString().slice(0,10);
   rows = Array.from({length:5},(_,i)=>newRow(i+1));
-  render(); select(0,0);
+  sel = {r:0, key:'no'};
+  rebuild();
 };
 
 /* ---- 表示切替 ---- */
@@ -957,18 +1116,20 @@ function setView(v){
   $('btnView').textContent = '表示：' + (VIEWS.find(x=>x[0]===v)||VIEWS[0])[1];
   try{ localStorage.setItem(STORE+':view', v); }catch(_){}
   closePicker();
+  ensureBuilt();
 }
 $('btnView').onclick = ()=>{
+  commitEdit();
   const i = VIEWS.findIndex(x=>x[0]===document.body.dataset.view);
   setView(VIEWS[(i+1)%VIEWS.length][0]);
 };
+mqNarrow.addEventListener('change', ()=>{ if(document.body.dataset.view==='auto') ensureBuilt(); });
 
 /* ============================================================
    CSV出力
    ============================================================ */
 $('btnCsv').onclick = ()=>{
   commitEdit(); closePicker();
-  const cum = cumulative();
   const q = s => `"${String(s??'').replace(/"/g,'""')}"`;
   const L = [];
   L.push([q('現場名'),q($('h_site').value),q('施工者名'),q($('h_builder').value)].join(','));
@@ -979,7 +1140,7 @@ $('btnCsv').onclick = ()=>{
     const cv = calcRow(r);
     L.push(COLS.map(c=>{
       if(c.type==='calc') return q(fmtDur(cv[c.key]));
-      if(c.key==='cum')   return q(((o.vol||'')!=='' || cum[r].manual) ? round2(cum[r].v) : '');
+      if(c.key==='cum')   return q(((o.vol||'')!=='' || cv.cumManual) ? round2(cv.cum) : '');
       return q(o[c.key]);
     }).join(','));
   });
@@ -987,7 +1148,7 @@ $('btnCsv').onclick = ()=>{
 };
 
 /* ============================================================
-   バックアップ（JSONファイル）
+   バックアップ
    ============================================================ */
 function fileStem(){
   const d = $('h_date').value || new Date().toISOString().slice(0,10);
@@ -996,8 +1157,7 @@ function fileStem(){
 }
 function downloadBlob(blob, name){
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href=url; a.download=name; a.style.display='none';
+  const a = el('a'); a.href=url; a.download=name; a.style.display='none';
   document.body.appendChild(a);
   a.click();
   setTimeout(()=>{ a.remove(); URL.revokeObjectURL(url); }, 1000);
@@ -1021,7 +1181,8 @@ $('fileIn').addEventListener('change', e=>{
     rows = d.rows.map(o=>Object.assign(newRow(''), o));
     if(!rows.length) rows=[newRow(1)];
     if(d.head) HEAD_IDS.forEach(id=>{ if(d.head[id]!=null) $(id).value=d.head[id]; });
-    render(); select(0,0);
+    sel = {r:0, key:'no'};
+    rebuild();
   };
   rd.readAsText(f);
 });
@@ -1063,19 +1224,21 @@ function load(){
   }
   let v='auto';
   try{ v = localStorage.getItem(STORE+':view') || 'auto'; }catch(_){}
-  setView(VIEWS.some(x=>x[0]===v) ? v : 'auto');
+  document.body.dataset.view = VIEWS.some(x=>x[0]===v) ? v : 'auto';
+  $('btnView').textContent = '表示：' + (VIEWS.find(x=>x[0]===document.body.dataset.view)||VIEWS[0])[1];
 }
-HEAD_IDS.forEach(id=>$(id).addEventListener('input', ()=>{ save(); renderStats(cumulative()); }));
+HEAD_IDS.forEach(id=>$(id).addEventListener('input', ()=>{ save(); scheduleStats(); }));
 
 /* ============================================================
    起動
    ============================================================ */
 load();
-render();
-select(0,0,{scroll:false});
-window.addEventListener('resize', positionPicker);
-window.addEventListener('scroll', positionPicker, {passive:true});
-$('gridWrap').addEventListener('scroll', positionPicker, {passive:true});
+recompute();
+ensureBuilt();
+renderStats();
+window.addEventListener('resize', schedulePosition);
+window.addEventListener('scroll', schedulePosition, {passive:true});
+$('gridWrap').addEventListener('scroll', schedulePosition, {passive:true});
 </script>
 </body>
 </html>
