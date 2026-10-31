@@ -102,8 +102,29 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- ===== 破壊試験フォーム ===== -->
-<template id="tpl-concrete">
+
+
+<script>
+window.addEventListener('error', function (e) {
+  var m = document.getElementById('main');
+  if (m) m.insertAdjacentHTML('afterbegin', '<div class="card" style="color:#b3261e">エラーが発生しました：' +
+    String(e.message).replace(/</g, '&lt;') + '（' + (e.lineno || '?') + '行目）<br>この画面のスクリーンショットを送ってください。</div>');
+});
+</script>
+<script>
+/* ===========================================================================
+ * かんたん予定追加（ログイン不要版）
+ *
+ * Google アカウントへのアクセス許可を一切求めません。
+ * 予定の内容を入れた状態で Google カレンダーの「予定を作成」画面を開くので、
+ * そこで［保存］を押すと登録されます。高度な保護機能プログラム（Advanced
+ * Protection）が有効なアカウントでも使えます。
+ * 設定（カレンダー一覧・現場名の履歴）はこの端末のブラウザに保存されます。
+ * ========================================================================= */
+
+/* 入力フォームの部品（Apps Script で確実に動くよう、HTML ではなくここに記述） */
+const TEMPLATES = {
+  concrete: `
   <div class="card">
     <label class="field">現場名</label>
     <input type="text" data-k="site" list="siteList" placeholder="例）○○ビル新築工事" autocomplete="off">
@@ -144,10 +165,8 @@
     <label class="field">登録先カレンダー</label>
     <select data-k="calendar"></select>
   </div>
-</template>
-
-<!-- ===== 一般予定フォーム（営業・修理など） ===== -->
-<template id="tpl-appointment">
+`,
+  appointment: `
   <div class="card">
     <label class="field">件名（顧客名・現場名など）</label>
     <input type="text" data-k="title" placeholder="例）△△様 打合せ" autocomplete="off">
@@ -180,25 +199,8 @@
     <label class="field">登録先カレンダー</label>
     <select data-k="calendar"></select>
   </div>
-</template>
-
-<script>
-window.addEventListener('error', function (e) {
-  var m = document.getElementById('main');
-  if (m) m.insertAdjacentHTML('afterbegin', '<div class="card" style="color:#b3261e">エラーが発生しました：' +
-    String(e.message).replace(/</g, '&lt;') + '（' + (e.lineno || '?') + '行目）<br>この画面のスクリーンショットを送ってください。</div>');
-});
-</script>
-<script>
-/* ===========================================================================
- * かんたん予定追加（ログイン不要版）
- *
- * Google アカウントへのアクセス許可を一切求めません。
- * 予定の内容を入れた状態で Google カレンダーの「予定を作成」画面を開くので、
- * そこで［保存］を押すと登録されます。高度な保護機能プログラム（Advanced
- * Protection）が有効なアカウントでも使えます。
- * 設定（カレンダー一覧・現場名の履歴）はこの端末のブラウザに保存されます。
- * ========================================================================= */
+`,
+};
 
 /** タブ（カテゴリ）。type: 'concrete' = 破壊試験 / 'appointment' = 一般予定 */
 const CATEGORIES = [
@@ -360,7 +362,7 @@ function quickDateChips(container, input, onChange) {
 /* ---------- 破壊試験ビュー ---------- */
 function createConcreteView(cat) {
   const wrap = document.createElement('div');
-  wrap.appendChild(document.getElementById('tpl-concrete').content.cloneNode(true));
+  wrap.innerHTML = TEMPLATES.concrete;
   const state = { ages: new Set(CONCRETE_AGES), customAges: new Set(), customDates: new Set() };
 
   const site = $(wrap, 'site'), part = $(wrap, 'part'), cast = $(wrap, 'castDate');
@@ -461,7 +463,7 @@ function createConcreteView(cat) {
 /* ---------- 一般予定ビュー ---------- */
 function createAppointmentView(cat) {
   const wrap = document.createElement('div');
-  wrap.appendChild(document.getElementById('tpl-appointment').content.cloneNode(true));
+  wrap.innerHTML = TEMPLATES.appointment;
   const title = $(wrap, 'title'), date = $(wrap, 'date'), time = $(wrap, 'time');
   const timeChips = $(wrap, 'timeChips'), durChips = $(wrap, 'durationChips');
   const location = $(wrap, 'location'), memo = $(wrap, 'memo'), preview = $(wrap, 'preview'), calSel = $(wrap, 'calendar');
@@ -683,7 +685,14 @@ function toast(msg, isError) {
 }
 
 /* ---------- 起動 ---------- */
+function showFatal(e) {
+  document.getElementById('main').innerHTML = '<div class="card" style="color:#b3261e">起動時にエラーが発生しました：' +
+    esc((e && (e.stack || e.message)) || e) + '<br>この画面のスクリーンショットを送ってください。</div>';
+}
 (function init() {
+  try { boot(); } catch (e) { showFatal(e); }
+})();
+function boot() {
   const tabs = document.getElementById('tabs');
   CATEGORIES.forEach(cat => {
     const v = views[cat.key] = cat.type === 'concrete' ? createConcreteView(cat) : createAppointmentView(cat);
@@ -700,7 +709,7 @@ function toast(msg, isError) {
   let start = CATEGORIES[0].key;
   try { const s = localStorage.getItem(STORE_KEY + '.tab'); if (views[s]) start = s; } catch (e) {}
   showTab(start);
-})();
+}
 </script>
 </body>
 </html>
