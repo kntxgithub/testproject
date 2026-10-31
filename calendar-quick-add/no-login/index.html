@@ -85,7 +85,13 @@
   <nav id="tabs"></nav>
 </header>
 
-<main id="main"></main>
+<main id="main">
+  <div class="card" id="noJs">
+    <b>画面を読み込めていません。</b><br>
+    <span class="muted">このファイルを、プレビュー画面（Claude アプリ、GitHub、ファイルアプリなど）で直接開くと、プログラムが動かないためこの状態になります。
+    Apps Script で「デプロイ → ウェブアプリ」をして、表示された <b>URL（https://script.google.com/macros/s/…/exec）</b> を Chrome や Safari で開いてください。</span>
+  </div>
+</main>
 
 <div class="submit-bar" id="submitBar">
   <div class="inner"><button class="btn" id="submitBtn">カレンダーに追加</button></div>
@@ -176,6 +182,13 @@
   </div>
 </template>
 
+<script>
+window.addEventListener('error', function (e) {
+  var m = document.getElementById('main');
+  if (m) m.insertAdjacentHTML('afterbegin', '<div class="card" style="color:#b3261e">エラーが発生しました：' +
+    String(e.message).replace(/</g, '&lt;') + '（' + (e.lineno || '?') + '行目）<br>この画面のスクリーンショットを送ってください。</div>');
+});
+</script>
 <script>
 /* ===========================================================================
  * かんたん予定追加（ログイン不要版）
