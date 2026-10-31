@@ -1,0 +1,9 @@
+{
+  "timeZone": "Asia/Tokyo",
+  "runtimeVersion": "V8",
+  "oauthScopes": [],
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "ANYONE_ANONYMOUS"
+  }
+}
