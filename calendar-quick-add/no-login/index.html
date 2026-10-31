@@ -81,7 +81,7 @@
 </head>
 <body>
 <header>
-  <h1>📅 かんたん予定追加</h1>
+  <h1>&#x1F4C5; かんたん予定追加</h1>
   <nav id="tabs"></nav>
 </header>
 
@@ -186,8 +186,12 @@
 <script>
 window.addEventListener('error', function (e) {
   var m = document.getElementById('main');
+  var line = '';
+  try { line = document.documentElement.outerHTML.split(String.fromCharCode(10))[e.lineno - 1] || ''; } catch (x) {}
+  var safe = function (t) { return String(t).split('&').join('&amp;').split('<').join('&lt;'); };
   if (m) m.insertAdjacentHTML('afterbegin', '<div class="card" style="color:#b3261e">エラーが発生しました：' +
-    String(e.message).replace(/</g, '&lt;') + '（' + (e.lineno || '?') + '行目）<br>この画面のスクリーンショットを送ってください。</div>');
+    safe(e.message) + '（' + (e.lineno || '?') + '行目 ' + (e.colno || '') + '文字目）<br><code>' + safe(line.slice(0, 300)) +
+    '</code><br>この画面のスクリーンショットを送ってください。</div>');
 });
 </script>
 <script>
@@ -221,6 +225,7 @@ const CONCRETE_AGES = [7, 28];
 const TIMES = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
 const DURS = [[30, '30分'], [60, '1時間'], [90, '1.5時間'], [120, '2時間'], [180, '3時間'], [0, '終日']];
 const TIMEZONE = 'Asia/Tokyo';
+const NL = String.fromCharCode(10), CR = String.fromCharCode(13), BS = String.fromCharCode(92);
 
 /* ---------- 保存（この端末の localStorage） ---------- */
 const STORE_KEY = 'quickAddNoLogin.v1';
@@ -253,10 +258,10 @@ const addDays = (iso, n) => {const d = toUTC(iso);d.setUTCDate(d.getUTCDate() + 
 const diffDays = (a, b) => Math.round((toUTC(b) - toUTC(a)) / 86400000);
 const today = () => {const n = new Date();return ymd(n.getFullYear(), n.getMonth() + 1, n.getDate());};
 const weekday = (iso) => toUTC(iso).getUTCDay();
-const fmtDate = (iso) => {const d = toUTC(iso);return "".concat(d.getUTCFullYear(), "/").concat(d.getUTCMonth() + 1, "/").concat(d.getUTCDate(), "(").concat(WD[d.getUTCDay()], ")");};
-const fmtDur = (min) => min >= 60 ? "".concat(Math.floor(min / 60), "時間").concat(min % 60 ? min % 60 + '分' : '') : "".concat(min, "分");
+const fmtDate = (iso) => {const d = toUTC(iso);return ''.concat(d.getUTCFullYear(), '/').concat(d.getUTCMonth() + 1, '/').concat(d.getUTCDate(), '(').concat(WD[d.getUTCDay()], ')');};
+const fmtDur = (min) => min >= 60 ? ''.concat(Math.floor(min / 60), '時間').concat(min % 60 ? min % 60 + '分' : '') : ''.concat(min, '分');
 const addMinutes = (hhmm, min) => {const [h, m] = hhmm.split(':').map(Number);const t = h * 60 + m + min;
-  return "".concat(String(Math.floor(t / 60) % 24).padStart(2, '0'), ":").concat(String(t % 60).padStart(2, '0'));};
+  return ''.concat(String(Math.floor(t / 60) % 24).padStart(2, '0'), ':').concat(String(t % 60).padStart(2, '0'));};
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 /* ---------- 日本の祝日（2020年以降の法律に基づく計算） ---------- */
@@ -292,7 +297,7 @@ function dayClass(iso) {
 }
 function dayWarn(iso) {
   const h = holidayName(iso);
-  if (h) return "<span class=\"badge warn\">".concat(esc(h), "</span>");
+  if (h) return '<span class="badge warn">'.concat(esc(h), '</span>');
   const w = weekday(iso);
   return w === 0 ? '<span class="badge warn">日曜</span>' : w === 6 ? '<span class="badge warn">土曜</span>' : '';
 }
@@ -319,22 +324,26 @@ function googleCalendarUrl(ev, calendarId) {
 }
 
 /* ---------- まとめて登録用の .ics ファイル ---------- */
-function icsEscape(s) {return String(s || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');}
+// 特殊文字は Apps Script で壊れないよう文字コードで表す（BS=バックスラッシュ, NL=改行, CR=復帰）
+function icsEscape(s) {
+  let out = String(s || '').split(BS).join(BS + BS).split(CR).join('').split(NL).join(BS + 'n');
+  return out.split(',').join(BS + ',').split(';').join(BS + ';');
+}
 function buildIcs(events) {
-  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
+  const stamp = new Date().toISOString().slice(0, 19).replace(/[-:]/g, '') + 'Z';
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//quick-add//JA', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
   events.forEach((ev, i) => {
     const [s, e] = eventDates(ev);
-    lines.push('BEGIN:VEVENT', "UID:".concat(stamp, "-").concat(i, "-").concat(Math.random().toString(36).slice(2), "@quick-add"), "DTSTAMP:".concat(stamp),
-    ev.allDay ? "DTSTART;VALUE=DATE:".concat(s) : "DTSTART;TZID=".concat(TIMEZONE, ":").concat(s),
-    ev.allDay ? "DTEND;VALUE=DATE:".concat(e) : "DTEND;TZID=".concat(TIMEZONE, ":").concat(e), "SUMMARY:".concat(
+    lines.push('BEGIN:VEVENT', 'UID:'.concat(stamp, '-').concat(i, '-').concat(Math.random().toString(36).slice(2), '@quick-add'), 'DTSTAMP:'.concat(stamp),
+    ev.allDay ? 'DTSTART;VALUE=DATE:'.concat(s) : 'DTSTART;TZID='.concat(TIMEZONE, ':').concat(s),
+    ev.allDay ? 'DTEND;VALUE=DATE:'.concat(e) : 'DTEND;TZID='.concat(TIMEZONE, ':').concat(e), 'SUMMARY:'.concat(
       icsEscape(ev.title)));
-    if (ev.description) lines.push("DESCRIPTION:".concat(icsEscape(ev.description)));
-    if (ev.location) lines.push("LOCATION:".concat(icsEscape(ev.location)));
+    if (ev.description) lines.push('DESCRIPTION:'.concat(icsEscape(ev.description)));
+    if (ev.location) lines.push('LOCATION:'.concat(icsEscape(ev.location)));
     lines.push('END:VEVENT');
   });
   lines.push('END:VCALENDAR');
-  return lines.join('\r\n');
+  return lines.join(CR + NL);
 }
 function downloadIcs(events, name) {
   const blob = new Blob([buildIcs(events)], { type: 'text/calendar;charset=utf-8' });
@@ -347,11 +356,11 @@ function downloadIcs(events, name) {
 /* ---------- 共通部品 ---------- */
 const views = {};
 let currentKey = null;
-function $(root, k) {return root.querySelector("[data-k=\"".concat(k, "\"]"));}
+function $(root, k) {return root.querySelector('[data-k="'.concat(k, '"]'));}
 
 function fillCalendarSelect(sel, selectedId) {
-  sel.innerHTML = STORE.calendars.map((c) => "<option value=\"".concat(
-    esc(c.id), "\" ").concat(c.id === selectedId ? 'selected' : '', ">").concat(esc(c.name), "</option>")).join('');
+  sel.innerHTML = STORE.calendars.map((c) => '<option value="'.concat(
+    esc(c.id), '" ').concat(c.id === selectedId ? 'selected' : '', '>').concat(esc(c.name), '</option>')).join('');
 }
 
 function quickDateChips(container, input, onChange) {
@@ -376,7 +385,7 @@ function createConcreteView(cat) {
   const agesBox = $(wrap, 'ages'),customAge = $(wrap, 'customAge'),customDate = $(wrap, 'customDate');
   const includeCast = $(wrap, 'includeCast'),preview = $(wrap, 'preview'),calSel = $(wrap, 'calendar');
   const siteList = wrap.querySelector('#siteList');
-  const refreshSites = () => {siteList.innerHTML = STORE.recentSites.map((s) => "<option value=\"".concat(esc(s), "\">")).join('');};
+  const refreshSites = () => {siteList.innerHTML = STORE.recentSites.map((s) => '<option value="'.concat(esc(s), '">')).join('');};
 
   refreshSites();
   cast.value = today();
@@ -400,15 +409,15 @@ function createConcreteView(cat) {
     if (!cast.value) return list;
     if (includeCast.checked) list.push({ kind: 'cast', date: cast.value, label: '打設' });
     [...state.ages, ...state.customAges].sort((a, b) => a - b).
-    forEach((n) => list.push({ kind: 'age', age: n, date: addDays(cast.value, n), label: "".concat(n, "日破壊") }));
+    forEach((n) => list.push({ kind: 'age', age: n, date: addDays(cast.value, n), label: ''.concat(n, '日破壊') }));
     [...state.customDates].forEach((d) => {
       const n = diffDays(cast.value, d);
-      list.push({ kind: 'date', date: d, age: n, label: n > 0 ? "".concat(n, "日破壊") : '破壊試験' });
+      list.push({ kind: 'date', date: d, age: n, label: n > 0 ? ''.concat(n, '日破壊') : '破壊試験' });
     });
     return list.sort((a, b) => a.date.localeCompare(b.date));
   }
   const nameOf = () => [site.value.trim(), part.value.trim()].filter(Boolean).join(' ');
-  const titleOf = (it) => "".concat(cat.prefix || '', "【").concat(it.label, "】").concat(nameOf());
+  const titleOf = (it) => ''.concat(cat.prefix || '', '【').concat(it.label, '】').concat(nameOf());
 
   function render() {
     syncQuick();
@@ -417,7 +426,7 @@ function createConcreteView(cat) {
       const on = state.ages.has(n) || state.customAges.has(n);
       const b = document.createElement('button');
       b.className = 'chip' + (on ? ' on' : '');
-      b.innerHTML = "材齢".concat(n, "日") + (cast.value ? " <small>".concat(fmtDate(addDays(cast.value, n)).slice(5), "</small>") : '');
+      b.innerHTML = '材齢'.concat(n, '日') + (cast.value ? ' <small>'.concat(fmtDate(addDays(cast.value, n)).slice(5), '</small>') : '');
       b.onclick = () => {
         if (CONCRETE_AGES.includes(n)) {state.ages.has(n) ? state.ages.delete(n) : state.ages.add(n);} else
         state.customAges.delete(n);
@@ -427,7 +436,7 @@ function createConcreteView(cat) {
     });
     [...state.customDates].sort().forEach((d) => {
       const b = document.createElement('button');
-      b.className = 'chip on';b.textContent = "".concat(fmtDate(d).slice(5), " ✕");
+      b.className = 'chip on';b.textContent = ''.concat(fmtDate(d).slice(5), ' ✕');
       b.onclick = () => {state.customDates.delete(d);render();};
       agesBox.appendChild(b);
     });
@@ -435,8 +444,8 @@ function createConcreteView(cat) {
     const list = items();
     if (!site.value.trim()) preview.innerHTML = '<li class="empty">現場名を入力してください</li>';else
     if (!list.length) preview.innerHTML = '<li class="empty">破壊日を選んでください</li>';else
-    preview.innerHTML = list.map((it) => "<li><span class=\"t\">".concat(
-      esc(titleOf(it)), "</span><span class=\"d ").concat(dayClass(it.date), "\">").concat(fmtDate(it.date)).concat(dayWarn(it.date), "</span></li>")).join('');
+    preview.innerHTML = list.map((it) => '<li><span class="t">'.concat(
+      esc(titleOf(it)), '</span><span class="d ').concat(dayClass(it.date), '">').concat(fmtDate(it.date)).concat(dayWarn(it.date), '</span></li>')).join('');
     updateSubmit();
   }
 
@@ -449,12 +458,12 @@ function createConcreteView(cat) {
       name: site.value.trim(),
       events: list.map((it) => ({
         title: titleOf(it), date: it.date, allDay: true,
-        description: ["現場: ".concat(
+        description: ['現場: '.concat(
           site.value.trim()),
-        part.value.trim() && "部位: ".concat(part.value.trim()), "打設日: ".concat(
+        part.value.trim() && '部位: '.concat(part.value.trim()), '打設日: '.concat(
           fmtDate(cast.value)),
-        it.kind !== 'cast' && it.age > 0 && "材齢: ".concat(it.age, "日")].
-        filter(Boolean).join('\n')
+        it.kind !== 'cast' && it.age > 0 && '材齢: '.concat(it.age, '日')].
+        filter(Boolean).join(NL)
       }))
     };
   }
@@ -481,7 +490,7 @@ function createAppointmentView(cat) {
   const syncQuick = quickDateChips(wrap.querySelector('[data-quick="date"]'), date, () => render());
   [title, location, memo].forEach((i) => i.addEventListener('input', () => render()));
   time.addEventListener('change', () => render());
-  const fullTitle = () => "".concat(cat.prefix || '').concat(title.value.trim());
+  const fullTitle = () => ''.concat(cat.prefix || '').concat(title.value.trim());
 
   function render() {
     syncQuick();
@@ -507,10 +516,10 @@ function createAppointmentView(cat) {
     if (!title.value.trim()) preview.innerHTML = '<li class="empty">件名を入力してください</li>';else
     if (!date.value) preview.innerHTML = '<li class="empty">日付を選んでください</li>';else
     {
-      const when = allDay ? '終日' : "".concat(time.value, "〜").concat(addMinutes(time.value, state.duration), "（").concat(fmtDur(state.duration), "）");
-      preview.innerHTML = "<li><span class=\"t\">".concat(esc(fullTitle()), "</span><span class=\"d ").concat(dayClass(date.value), "\">").concat(fmtDate(date.value)).concat(dayWarn(date.value), "</span></li>\n        <li><span class=\"muted\">時間</span><span>").concat(
-        when, "</span></li>") + (
-      location.value.trim() ? "<li><span class=\"muted\">場所</span><span>".concat(esc(location.value.trim()), "</span></li>") : '');
+      const when = allDay ? '終日' : ''.concat(time.value, '〜').concat(addMinutes(time.value, state.duration), '（').concat(fmtDur(state.duration), '）');
+      preview.innerHTML = '<li><span class="t">'.concat(esc(fullTitle()), '</span><span class="d ').concat(dayClass(date.value), '">').concat(fmtDate(date.value)).concat(dayWarn(date.value), '</span></li> <li><span class="muted">時間</span><span>').concat(
+        when, '</span></li>') + (
+      location.value.trim() ? '<li><span class="muted">場所</span><span>'.concat(esc(location.value.trim()), '</span></li>') : '');
     }
     updateSubmit();
   }
@@ -541,7 +550,7 @@ function createAppointmentView(cat) {
 /* ---------- 設定ビュー ---------- */
 function createSettingsView() {
   const wrap = document.createElement('div');
-  wrap.innerHTML = "\n    <div class=\"card\">\n      <div style=\"font-weight:600;margin-bottom:4px\">① 使うカレンダーを登録</div>\n      <div class=\"muted\">名前は自由です。<b>カレンダーID</b> は、パソコンの Google カレンダーで\n        左の一覧のカレンダー名の「︙」→「設定と共有」→「カレンダーの統合」にある\n        <code>xxxx@group.calendar.google.com</code> です（メインのカレンダーはご自分のGmailアドレス）。\n        空欄の場合は、カレンダー側の既定（メイン）になります。</div>\n      <div id=\"calRows\"></div>\n      <button class=\"chip\" id=\"addCal\" style=\"margin-top:10px\">＋ カレンダーを追加</button>\n    </div>\n    <div class=\"card\">\n      <div style=\"font-weight:600;margin-bottom:4px\">② タブごとの登録先</div>\n      <div class=\"muted\" style=\"margin-bottom:4px\">各タブで最初に選ばれるカレンダーです。登録時に個別に変更もできます。</div>\n      <div id=\"mapRows\"></div>\n    </div>\n    <div class=\"card muted\">\n      設定はこの端末のブラウザに保存されます。別のスマホ・パソコンでは、もう一度設定してください。\n    </div>";
+  wrap.innerHTML = ' <div class="card"> <div style="font-weight:600;margin-bottom:4px">① 使うカレンダーを登録</div> <div class="muted">名前は自由です。<b>カレンダーID</b> は、パソコンの Google カレンダーで 左の一覧のカレンダー名の「︙」→「設定と共有」→「カレンダーの統合」にある <code>xxxx@group.calendar.google.com</code> です（メインのカレンダーはご自分のGmailアドレス）。 空欄の場合は、カレンダー側の既定（メイン）になります。</div> <div id="calRows"></div> <button class="chip" id="addCal" style="margin-top:10px">＋ カレンダーを追加</button> </div> <div class="card"> <div style="font-weight:600;margin-bottom:4px">② タブごとの登録先</div> <div class="muted" style="margin-bottom:4px">各タブで最初に選ばれるカレンダーです。登録時に個別に変更もできます。</div> <div id="mapRows"></div> </div> <div class="card muted"> 設定はこの端末のブラウザに保存されます。別のスマホ・パソコンでは、もう一度設定してください。 </div>';
 
 
 
@@ -567,8 +576,8 @@ function createSettingsView() {
     draft.forEach((c, i) => {
       const r = document.createElement('div');
       r.className = 'settings-row';
-      r.innerHTML = "<div class=\"cal-row\"><input type=\"text\" data-f=\"name\" placeholder=\"表示名（例：現場・試験）\">\n        <button class=\"chip\" data-f=\"del\" ".concat(
-        draft.length <= 1 ? 'disabled style="opacity:.4"' : '', ">削除</button></div>\n        <div class=\"cal-row\"><input type=\"text\" data-f=\"id\" placeholder=\"カレンダーID（空欄＝メイン）\" autocapitalize=\"off\" autocorrect=\"off\" spellcheck=\"false\"></div>");
+      r.innerHTML = '<div class="cal-row"><input type="text" data-f="name" placeholder="表示名（例：現場・試験）"> <button class="chip" data-f="del" '.concat(
+        draft.length <= 1 ? 'disabled style="opacity:.4"' : '', '>削除</button></div> <div class="cal-row"><input type="text" data-f="id" placeholder="カレンダーID（空欄＝メイン）" autocapitalize="off" autocorrect="off" spellcheck="false"></div>');
 
       const n = r.querySelector('[data-f="name"]'),id = r.querySelector('[data-f="id"]');
       n.value = c.name;id.value = c.id;
@@ -586,11 +595,11 @@ function createSettingsView() {
     CATEGORIES.forEach((cat) => {
       const r = document.createElement('div');
       r.className = 'settings-row';
-      r.innerHTML = "<label class=\"field\">".concat(esc(cat.label), "</label><select data-cat=\"").concat(esc(cat.key), "\"></select>");
+      r.innerHTML = '<label class="field">'.concat(esc(cat.label), '</label><select data-cat="').concat(esc(cat.key), '"></select>');
       const sel = r.querySelector('select');
       const savedIdx = draft.findIndex((c) => c.id === STORE.settings[cat.key]);
       const idx = cat.key in current ? current[cat.key] : Math.max(savedIdx, 0);
-      sel.innerHTML = draft.map((c, i) => "<option value=\"".concat(i, "\" ").concat(i === idx ? 'selected' : '', ">").concat(esc(c.name || '(名前なし)'), "</option>")).join('');
+      sel.innerHTML = draft.map((c, i) => '<option value="'.concat(i, '" ').concat(i === idx ? 'selected' : '', '>').concat(esc(c.name || '(名前なし)'), '</option>')).join('');
       mapRows.appendChild(r);
     });
   }
@@ -615,23 +624,23 @@ function openSheet(payload, view) {
   const cal = STORE.calendars.find((c) => c.id === payload.calendarId) || STORE.calendars[0];
   const inner = document.getElementById('sheetInner');
   const n = payload.events.length;
-  inner.innerHTML = "\n    <h2>Google カレンダーに登録</h2>\n    <div class=\"muted\">登録先：<b>".concat(
+  inner.innerHTML = ' <h2>Google カレンダーに登録</h2> <div class="muted">登録先：<b>'.concat(
 
-    esc(cal.name), "</b><br>\n      ボタンを押すと予定の作成画面が開きます。内容と登録先カレンダーを確かめて［保存］を押してください。</div>\n    <div id=\"evRows\" style=\"margin-top:6px\"></div>\n    ").concat(
+    esc(cal.name), '</b><br> ボタンを押すと予定の作成画面が開きます。内容と登録先カレンダーを確かめて［保存］を押してください。</div> <div id="evRows" style="margin-top:6px"></div> ').concat(
 
 
-    n > 1 ? "<button class=\"btn secondary\" id=\"icsBtn\" style=\"margin-top:12px\">📥 ".concat(n, "件まとめて .ics ファイルで保存</button>\n      <div class=\"muted\" style=\"margin-top:4px\">パソコンの Google カレンダーの「設定 → インポート」で、登録先カレンダーを選んで一度に取り込めます。</div>") :
-    '', "\n    <button class=\"btn\" id=\"sheetDone\" style=\"margin-top:12px\">完了（入力をクリア）</button>\n    <button class=\"btn secondary\" id=\"sheetClose\" style=\"margin-top:8px\">戻る（入力はそのまま）</button>");
+    n > 1 ? '<button class="btn secondary" id="icsBtn" style="margin-top:12px">'.concat(n, '件まとめて .ics ファイルで保存</button> <div class="muted" style="margin-top:4px">パソコンの Google カレンダーの「設定 → インポート」で、登録先カレンダーを選んで一度に取り込めます。</div>') :
+    '', ' <button class="btn" id="sheetDone" style="margin-top:12px">完了（入力をクリア）</button> <button class="btn secondary" id="sheetClose" style="margin-top:8px">戻る（入力はそのまま）</button>');
 
 
   const rows = inner.querySelector('#evRows');
   payload.events.forEach((ev, i) => {
-    const when = ev.allDay ? '終日' : "".concat(ev.startTime, "〜").concat(addMinutes(ev.startTime, ev.durationMin));
+    const when = ev.allDay ? '終日' : ''.concat(ev.startTime, '〜').concat(addMinutes(ev.startTime, ev.durationMin));
     const r = document.createElement('div');
     r.className = 'ev-row';
-    r.innerHTML = "<div class=\"info\"><div class=\"t\">".concat(esc(ev.title), "</div>\n        <div class=\"muted\"><span class=\"").concat(
-      dayClass(ev.date), "\">").concat(fmtDate(ev.date), "</span> ").concat(when, "</div></div>\n      <a class=\"btn small\" target=\"_blank\" rel=\"noopener\">").concat(
-      n > 1 ? i + 1 + '. ' : '', "開く</a>");
+    r.innerHTML = '<div class="info"><div class="t">'.concat(esc(ev.title), '</div> <div class="muted"><span class="').concat(
+      dayClass(ev.date), '">').concat(fmtDate(ev.date), '</span> ').concat(when, '</div></div> <a class="btn small" target="_blank" rel="noopener">').concat(
+      n > 1 ? i + 1 + '. ' : '', '開く</a>');
     const a = r.querySelector('a');
     a.href = googleCalendarUrl(ev, payload.calendarId);
     a.addEventListener('click', () => {a.classList.add('done');a.textContent = '✓ 開いた';});
@@ -659,7 +668,7 @@ function updateSubmit() {
   if (currentKey === '__settings') {submitBtn.textContent = '設定を保存';submitBtn.disabled = false;return;}
   const cat = CATEGORIES.find((c) => c.key === currentKey);
   const n = v.count();
-  submitBtn.textContent = n > 1 ? "".concat(cat.label, " ").concat(n, "件をカレンダーに追加") : "".concat(cat.label, "をカレンダーに追加");
+  submitBtn.textContent = n > 1 ? ''.concat(cat.label, ' ').concat(n, '件をカレンダーに追加') : ''.concat(cat.label, 'をカレンダーに追加');
   submitBtn.disabled = n === 0;
 }
 
